@@ -24,3 +24,7 @@ export interface ParallaxProps {
 export interface YellowHeaderProps {
   yellowCardStyle?: React.CSSProperties;
 }
+
+// Re-export all types
+export * from "./portfolio";
+export * from "./blog";
