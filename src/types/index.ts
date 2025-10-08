@@ -1,9 +1,5 @@
 // Common type definitions for the portfolio website
 
-export interface NavbarProps {
-  scroll?: number;
-}
-
 export interface InfoboxProps {
   name: string;
 }

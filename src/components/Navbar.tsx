@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { NavbarProps } from "@/types";
+import { useStore } from "@/lib/store";
 
-export default function Navbar({ scroll = 0 }: NavbarProps) {
+export default function Navbar() {
   const pathname = usePathname();
+  const scroll = useStore((state) => state.scroll);
   const [position, setPosition] = useState<"static" | "fixed">("static");
 
   useEffect(() => {
