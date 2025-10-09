@@ -10,9 +10,9 @@ export default function Parallax({
   top = "0%",
   left,
   right,
-  maxTop = null,
+  maxTop,
   zindex = "0",
-  color = null,
+  color,
   image,
   children,
 }: ParallaxProps) {

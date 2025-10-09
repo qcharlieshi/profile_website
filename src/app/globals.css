@@ -1,3 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Syntax highlighting for code blocks */
+@import 'highlight.js/styles/github-dark.css';
