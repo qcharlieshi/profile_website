@@ -1,5 +1,15 @@
+import type { Metadata } from "next";
 import { portfolioProjects } from "@/data/portfolio";
 import PortfolioCard from "@/components/PortfolioCard";
+
+export const metadata: Metadata = {
+  title: "Portfolio | Charlie Shi",
+  description: "Explore my software engineering projects and technical work",
+  openGraph: {
+    title: "Portfolio | Charlie Shi",
+    description: "Explore my software engineering projects and technical work",
+  },
+};
 
 export default function PortfolioPage() {
   return (

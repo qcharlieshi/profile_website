@@ -34,10 +34,12 @@ export default function Infobox({ name }: InfoboxProps) {
       <div style={{ margin: "20px", marginTop: "40px" }}>
         <div style={{ width: "1400px", height: "200px", overflow: "hidden" }}>
           {technologies.map((tech, index) => (
-            <img
+            <Image
               key={`${tech.alt}-${index}`}
               src={tech.src}
               alt={tech.alt}
+              width={100}
+              height={100}
               className={index === 0 ? "first" : ""}
             />
           ))}

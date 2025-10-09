@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { format } from 'date-fns';
 import { BlogPost } from '@/types/blog';
 
@@ -14,10 +15,11 @@ export default function BlogCard({ post }: BlogCardProps) {
       {/* Featured image */}
       {post.image && (
         <Link href={`/blog/${post.slug}`} className="relative h-48 overflow-hidden">
-          <img
+          <Image
             src={post.image}
             alt={post.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
         </Link>
       )}
