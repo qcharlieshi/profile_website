@@ -45,8 +45,9 @@ src/
 │   └── medium.ts             # Fetch + parse Medium RSS at build time
 ├── types/
 │   └── index.ts              # MediumPost, PortfolioProject interfaces
-└── styles/
-    └── global.css            # Tailwind directives + design system CSS
+├── styles/
+│   └── global.css            # Tailwind directives + design system CSS
+└── env.d.ts                  # Astro types reference
 public/
 ├── images/                   # Portfolio images, icons
 └── favicon.ico
@@ -57,7 +58,7 @@ public/
 - `@astrojs/tailwind` integration
 - `@tailwindcss/typography` for `prose prose-invert` blog content
 - Design tokens in `tailwind.config.mjs`:
-  - Colors: `bg-primary` `#0a0a0a`, `bg-surface` `#141414`, `accent-cyan` `#00f0ff`, `accent-magenta` `#ff2d6b`, `accent-yellow` `#ffd23f`, `border-default` `#2a2a2a`
+  - Colors: `bg-primary` `#0a0a0a`, `bg-surface` `#141414`, `bg-elevated` `#1e1e1e`, `text-primary` `#e8e8e8`, `text-secondary` `#888888`, `accent-cyan` `#00f0ff`, `accent-magenta` `#ff2d6b`, `accent-yellow` `#ffd23f`, `border-default` `#2a2a2a`
   - Fonts: `font-display` (Space Grotesk), `font-mono` (JetBrains Mono), `font-body` (Inter)
 - Utility classes in `src/styles/global.css`:
   - `.noise-overlay` — fixed SVG `feTurbulence` grain over entire page
@@ -115,3 +116,4 @@ npm run preview  # Serve built dist/ locally
 
 - **Design spec:** `docs/superpowers/specs/2026-04-14-astro-cloudflare-migration-design.md`
 - **Implementation plan:** `docs/superpowers/plans/2026-04-14-astro-cloudflare-migration.md`
+- **`MODERNIZATION_PLAN.md`** (repo root): stale legacy plan describing a Next.js migration that was abandoned in favor of the Astro + Cloudflare Pages stack described above. Do not treat as authoritative.
