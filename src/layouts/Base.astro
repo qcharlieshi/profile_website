@@ -1,4 +1,6 @@
 ---
+import Navbar from '../components/Navbar.astro';
+
 interface Props {
   title: string;
   description?: string;
@@ -33,6 +35,7 @@ const { title, description = 'Charlie Shi — Full Stack Engineer', ogImage } = 
       </filter>
     </svg>
     <div class="noise-overlay" style="filter: url(#noise);"></div>
+    <Navbar />
     <slot />
   </body>
 </html>

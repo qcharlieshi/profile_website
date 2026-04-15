@@ -1,0 +1,35 @@
+---
+const pathname = Astro.url.pathname;
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/portfolio/', label: 'Portfolio' },
+  { href: '/blog/', label: 'Blog' },
+];
+---
+
+<nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-bg-primary/70 border-b border-border-default">
+  <div class="max-w-[1200px] mx-auto px-6 h-14 flex items-center justify-between">
+    <a href="/" class="font-mono text-xs tracking-[0.2em] text-accent-cyan reg-mark flex items-center gap-2">
+      CS
+    </a>
+
+    <ul class="flex gap-8">
+      {links.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class:list={[
+              'font-mono text-xs uppercase tracking-[0.15em] py-1 transition-colors duration-200 glitch-hover',
+              pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+                ? 'text-accent-cyan border-b-2 border-accent-cyan'
+                : 'text-text-secondary hover:text-text-primary',
+            ]}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>
