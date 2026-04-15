@@ -10,3 +10,10 @@ dist/
 
 # Stale Next.js build cache (pre-migration)
 .next/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
