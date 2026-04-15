@@ -1,35 +1,36 @@
 ---
-import type { PortfolioProject } from '../types/index';
+import type { CollectionEntry } from 'astro:content';
 
 interface Props {
-  project: PortfolioProject;
+  project: CollectionEntry<'portfolio'>;
 }
 
 const { project } = Astro.props;
+const { slug, data } = project;
 ---
 
 <a
-  href={`/portfolio/${project.slug}/`}
+  href={`/portfolio/${slug}/`}
   class:list={[
     'block bg-bg-surface border border-border-default rounded-none p-6 transition-all duration-300 dot-grid',
     'hover:border-accent-cyan hover:shadow-[0_0_20px_rgba(0,240,255,0.1)]',
-    project.featured && 'glow-pulse md:col-span-2',
+    data.featured && 'glow-pulse md:col-span-2',
   ]}
 >
-  {project.featured && (
+  {data.featured && (
     <span class="inline-block font-mono text-[10px] text-accent-magenta tracking-[0.2em] uppercase mb-3 border border-accent-magenta px-2 py-0.5">
       Featured
     </span>
   )}
 
-  <h3 class="font-display text-lg font-bold tracking-wider mb-2">{project.title}</h3>
+  <h3 class="font-display text-lg font-bold tracking-wider mb-2">{data.title}</h3>
 
   <p class="text-sm text-text-secondary leading-relaxed mb-4 line-clamp-3">
-    {project.description}
+    {data.description}
   </p>
 
   <div class="flex flex-wrap gap-2">
-    {project.tags.map((tag) => (
+    {data.tags.map((tag) => (
       <span class="font-mono text-[10px] text-accent-magenta tracking-widest uppercase">
         {tag}
       </span>
@@ -37,6 +38,6 @@ const { project } = Astro.props;
   </div>
 
   <span class="font-mono text-[10px] text-text-secondary tracking-widest mt-4 block">
-    {project.date}
+    {data.date}
   </span>
 </a>

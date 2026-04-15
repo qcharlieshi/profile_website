@@ -39,12 +39,13 @@ src/
 │   ├── SectionDivider.astro  # // LABEL with dither divider + reg mark
 │   ├── PortfolioCard.astro   # Project card, dot grid, glow on hover
 │   └── BlogCard.astro        # Blog post preview card
-├── data/
-│   └── portfolio.ts          # Portfolio project data (PortfolioProject[])
+├── content/
+│   ├── config.ts             # Collections schema (Zod)
+│   └── portfolio/            # One .md file per project (frontmatter + body)
 ├── lib/
 │   └── medium.ts             # Fetch + parse Medium RSS at build time
 ├── types/
-│   └── index.ts              # MediumPost, PortfolioProject interfaces
+│   └── index.ts              # MediumPost interface
 ├── styles/
 │   └── global.css            # Tailwind directives + design system CSS
 └── env.d.ts                  # Astro types reference
@@ -110,10 +111,10 @@ npm run preview  # Serve built dist/ locally
 - **Dark mode only:** No light mode toggle
 - **Monospace metadata:** Dates, tags, section labels, nav items use `font-mono` to feel like technical annotations
 - **All-caps display headings:** `text-transform: uppercase` enforced globally on h1-h6 in `global.css`
-- **Featured items:** `featured: true` on a `PortfolioProject` adds `glow-pulse` animation and `md:col-span-2` in the grid
+- **Featured items:** `featured: true` in a portfolio entry's frontmatter adds `glow-pulse` animation and `md:col-span-2` in the grid
+- **Portfolio content:** Astro Content Collections. Schema in `src/content/config.ts`, one `.md` file per project in `src/content/portfolio/` (filename = slug). Load via `getCollection('portfolio')`; render bodies with `await entry.render()` + `<Content />`.
 
 ## Documentation
 
 - **Design spec:** `docs/superpowers/specs/2026-04-14-astro-cloudflare-migration-design.md`
 - **Implementation plan:** `docs/superpowers/plans/2026-04-14-astro-cloudflare-migration.md`
-- **`MODERNIZATION_PLAN.md`** (repo root): stale legacy plan describing a Next.js migration that was abandoned in favor of the Astro + Cloudflare Pages stack described above. Do not treat as authoritative.

@@ -1,19 +1,27 @@
 ---
+import { getCollection, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import SectionDivider from '../../components/SectionDivider.astro';
-import { portfolioProjects } from '../../data/portfolio';
 
-export function getStaticPaths() {
-  return portfolioProjects.map((project) => ({
+export async function getStaticPaths() {
+  const projects = await getCollection('portfolio');
+  return projects.map((project) => ({
     params: { slug: project.slug },
     props: { project },
   }));
 }
 
+interface Props {
+  project: CollectionEntry<'portfolio'>;
+}
+
 const { project } = Astro.props;
+const { data, body } = project;
+const { Content } = await project.render();
+const hasBody = body.trim().length > 0;
 ---
 
-<Base title={`${project.title} — Charlie Shi`}>
+<Base title={`${data.title} — Charlie Shi`}>
   <div class="pt-20">
     <SectionDivider label="PROJECT" />
   </div>
@@ -25,13 +33,13 @@ const { project } = Astro.props;
       </a>
 
       <h1 class="font-display font-extrabold tracking-[0.1em] mt-8 mb-4" style="font-size: clamp(1.5rem, 3vw, 2.5rem);">
-        {project.title}
+        {data.title}
       </h1>
 
       <div class="flex items-center gap-4 mb-8">
-        <span class="font-mono text-xs text-text-secondary tracking-widest">{project.date}</span>
+        <span class="font-mono text-xs text-text-secondary tracking-widest">{data.date}</span>
         <div class="flex gap-2">
-          {project.tags.map((tag) => (
+          {data.tags.map((tag) => (
             <span class="font-mono text-[10px] text-accent-magenta tracking-widest uppercase">
               {tag}
             </span>
@@ -41,16 +49,22 @@ const { project } = Astro.props;
 
       <div class="dither-divider mb-8"></div>
 
-      <p class="text-lg leading-relaxed text-text-primary">{project.description}</p>
+      <p class="text-lg leading-relaxed text-text-primary">{data.description}</p>
+
+      {hasBody && (
+        <div class="prose prose-invert max-w-none mt-8">
+          <Content />
+        </div>
+      )}
 
       <div class="flex gap-4 mt-8">
-        {project.githubUrl && (
-          <a href={project.githubUrl} class="font-mono text-xs text-accent-cyan tracking-widest uppercase hover:text-accent-yellow transition-colors">
+        {data.githubUrl && (
+          <a href={data.githubUrl} class="font-mono text-xs text-accent-cyan tracking-widest uppercase hover:text-accent-yellow transition-colors">
             GitHub &rarr;
           </a>
         )}
-        {project.liveUrl && (
-          <a href={project.liveUrl} class="font-mono text-xs text-accent-cyan tracking-widest uppercase hover:text-accent-yellow transition-colors">
+        {data.liveUrl && (
+          <a href={data.liveUrl} class="font-mono text-xs text-accent-cyan tracking-widest uppercase hover:text-accent-yellow transition-colors">
             Live &rarr;
           </a>
         )}
