@@ -7,3 +7,6 @@ npm-debug.log
 # Astro
 .astro/
 dist/
+
+# Stale Next.js build cache (pre-migration)
+.next/
