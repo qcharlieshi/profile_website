@@ -1,16 +1,9 @@
-# Ignore all node_modules
-node_modules/*
-
-# ...except the symlink to ourselves.
-!node_modules/APP
-
-# Compiled JS
-public/bundle.js
-public/bundle.js.map
+# Dependencies
+node_modules/
 
 # NPM errors
 npm-debug.log
 
-# Next.js
-.next/
-out/
+# Astro
+.astro/
+dist/
