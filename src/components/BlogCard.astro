@@ -1,0 +1,46 @@
+---
+import type { MediumPost } from '../types/index';
+
+interface Props {
+  post: MediumPost;
+}
+
+const { post } = Astro.props;
+
+const date = new Date(post.pubDate).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+<a
+  href={`/blog/${post.slug}/`}
+  class="block bg-bg-surface border border-border-default p-6 transition-all duration-300 dot-grid hover:border-accent-cyan hover:shadow-[0_0_20px_rgba(0,240,255,0.1)]"
+>
+  {post.thumbnail && (
+    <img
+      src={post.thumbnail}
+      alt={post.title}
+      class="w-full h-48 object-cover mb-4 grayscale hover:grayscale-0 transition-all duration-500"
+      loading="lazy"
+    />
+  )}
+
+  <h3 class="font-display text-lg font-bold tracking-wider mb-2 glitch-hover">{post.title}</h3>
+
+  <p class="text-sm text-text-secondary leading-relaxed mb-4 line-clamp-3">
+    {post.description}
+  </p>
+
+  <div class="flex items-center justify-between">
+    <span class="font-mono text-[10px] text-text-secondary tracking-widest">{date}</span>
+    <div class="flex gap-2">
+      {post.categories.slice(0, 3).map((cat) => (
+        <span class="font-mono text-[10px] text-accent-magenta tracking-widest uppercase">
+          {cat}
+        </span>
+      ))}
+    </div>
+  </div>
+</a>
