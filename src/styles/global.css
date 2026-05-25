@@ -128,3 +128,64 @@
   text-transform: uppercase;
   color: var(--text-secondary);
 }
+
+.name-flicker {
+  display: inline-grid;
+  grid-template-areas: 'n';
+  animation: name-jitter 6s steps(1, end) infinite;
+}
+
+.name-flicker > .name-en,
+.name-flicker > .name-zh {
+  grid-area: n;
+}
+
+.name-flicker > .name-en {
+  animation: name-flicker-en 6s steps(1, end) infinite;
+}
+
+.name-flicker > .name-zh {
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
+  opacity: 0;
+  animation: name-flicker-zh 6s steps(1, end) infinite;
+}
+
+@keyframes name-flicker-en {
+  0%, 45% { opacity: 1; }
+  46% { opacity: 0; }
+  47% { opacity: 1; }
+  48%, 95% { opacity: 0; }
+  96% { opacity: 1; }
+  97% { opacity: 0; }
+  98%, 100% { opacity: 1; }
+}
+
+@keyframes name-flicker-zh {
+  0%, 45% { opacity: 0; }
+  46% { opacity: 1; }
+  47% { opacity: 0; }
+  48%, 95% { opacity: 1; }
+  96% { opacity: 0; }
+  97% { opacity: 1; }
+  98%, 100% { opacity: 0; }
+}
+
+@keyframes name-jitter {
+  0%, 45% { transform: translateX(0); }
+  46% { transform: translateX(-3px); }
+  47% { transform: translateX(2px); }
+  48%, 95% { transform: translateX(0); }
+  96% { transform: translateX(3px); }
+  97% { transform: translateX(-2px); }
+  98%, 100% { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .name-flicker,
+  .name-flicker > * {
+    animation: none !important;
+  }
+  .name-flicker > .name-zh {
+    opacity: 0;
+  }
+}
