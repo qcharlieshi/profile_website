@@ -2,34 +2,94 @@
 interface Props {
   inset?: number;
   color?: string;
+  targets?: { tl?: string; tr?: string; bl?: string; br?: string };
 }
 
-const { inset = 18, color = 'var(--accent-yellow)' } = Astro.props;
+const { inset = 18, color = 'var(--accent-yellow)', targets } = Astro.props;
+
+type Corner = 'tl' | 'tr' | 'bl' | 'br';
+const labels: Record<Corner, string> = {
+  tl: 'top-left',
+  tr: 'top-right',
+  bl: 'bottom-left',
+  br: 'bottom-right',
+};
+const cornerOrder: Corner[] = ['tl', 'tr', 'bl', 'br'];
 ---
 
 <div class="cf" style={`--cf-i:${inset}px;--cf-c:${color};`}>
-  <span class="cf-tl"></span>
-  <span class="cf-tr"></span>
-  <span class="cf-bl"></span>
-  <span class="cf-br"></span>
+  {cornerOrder.map((c) => {
+    const target = targets?.[c];
+    return target ? (
+      <button
+        type="button"
+        class={`cf-corner cf-${c} cf-toggle`}
+        data-cf-toggle
+        data-cf-target={target}
+        aria-pressed="false"
+        aria-label={`Toggle ${labels[c]} label`}
+      ></button>
+    ) : (
+      <span class={`cf-corner cf-${c}`}></span>
+    );
+  })}
   <slot />
 </div>
 
 <style>
   .cf { position: relative; }
-  .cf > span {
+  .cf-corner {
     position: absolute;
     width: 22px;
     height: 22px;
     border: 1.5px solid var(--cf-c);
     pointer-events: none;
+    background: transparent;
+    padding: 0;
   }
   .cf-tl { top: var(--cf-i); left: var(--cf-i); border-right: none; border-bottom: none; }
   .cf-tr { top: var(--cf-i); right: var(--cf-i); border-left: none; border-bottom: none; }
   .cf-bl { bottom: var(--cf-i); left: var(--cf-i); border-right: none; border-top: none; }
   .cf-br { bottom: var(--cf-i); right: var(--cf-i); border-left: none; border-top: none; }
 
+  button.cf-corner {
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 20;
+    transition: background-color 140ms ease, box-shadow 140ms ease;
+  }
+  button.cf-corner:hover {
+    background: color-mix(in srgb, var(--cf-c) 22%, transparent);
+  }
+  button.cf-corner:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--cf-c) 60%, transparent);
+  }
+  button.cf-corner[aria-pressed="true"] {
+    background: var(--cf-c);
+  }
+
   @media (max-width: 768px) {
-    .cf > span { width: 14px; height: 14px; }
+    .cf-corner { width: 14px; height: 14px; }
   }
 </style>
+
+<script>
+  const wire = (root: ParentNode = document) => {
+    root.querySelectorAll<HTMLButtonElement>('button[data-cf-toggle]').forEach((btn) => {
+      if (btn.dataset.cfWired) return;
+      btn.dataset.cfWired = '1';
+      btn.addEventListener('click', () => {
+        const sel = btn.dataset.cfTarget;
+        if (!sel) return;
+        const el = document.querySelector<HTMLElement>(sel);
+        if (!el) return;
+        const next = btn.getAttribute('aria-pressed') !== 'true';
+        btn.setAttribute('aria-pressed', String(next));
+        el.classList.toggle('cf-hidden', next);
+      });
+    });
+  };
+  wire();
+  document.addEventListener('astro:page-load', () => wire());
+</script>

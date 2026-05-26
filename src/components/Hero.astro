@@ -17,11 +17,19 @@ const sector = initialPane === 'about' ? '01' : '02';
 ---
 
 <section class="hero glyph-grid" data-hero data-initial-pane={initialPane}>
-  <CornerFrame inset={18}>
+  <CornerFrame
+    inset={18}
+    targets={{
+      tl: '[data-cf-text="top-l"]',
+      tr: '[data-cf-text="top-r"]',
+      bl: '[data-cf-text="meta-bar"]',
+      br: '[data-cf-text="name-block"]',
+    }}
+  >
     <div class="hero-inner">
-      <div class="top-l">// PORTFOLIO.SYS — REV 2026.05</div>
+      <div class="top-l" data-cf-text="top-l">// PORTFOLIO.SYS — REV 2026.05</div>
 
-      <div class="top-r">
+      <div class="top-r" data-cf-text="top-r">
         <div class="commit-line">
           <b>{meta.shortHash}</b>LATEST COMMIT
           {meta.subject && <span class="commit-sub" title={meta.subject}>"{meta.subject}"</span>}
@@ -46,8 +54,8 @@ const sector = initialPane === 'about' ? '01' : '02';
 
       <RightRail activeKey={initialPane} />
 
-      <div class="name-block">
-        <div class="kicker">— STAFF AI ENGINEER · LILT AI</div>
+      <div class="name-block" data-cf-text="name-block">
+        <div class="kicker">— STAFF AI ENGINEER · <a class="kicker-link" href="https://lilt.com" target="_blank" rel="noopener noreferrer" aria-label="LILT AI — lilt.com">LILT AI</a></div>
         <h1 class="name name-glitch">
           <span class="name-en">CHARLIE SHI</span>
           <span class="name-zh" lang="zh">石千里</span>
@@ -58,7 +66,7 @@ const sector = initialPane === 'about' ? '01' : '02';
         <GlyphStrip direction="h" count={42} gap={10} glitch stretch />
       </div>
 
-      <div class="meta-bar">
+      <div class="meta-bar" data-cf-text="meta-bar">
         <span class="meta-coords">↳ BOSTON, MA</span>
         <span class="meta-sep">·</span>
         <a
@@ -184,6 +192,20 @@ const sector = initialPane === 'about' ? '01' : '02';
     text-transform: uppercase;
     color: var(--text-secondary);
     margin-bottom: 14px;
+  }
+  .kicker .kicker-link {
+    color: var(--accent-yellow);
+    text-decoration: none;
+    transition: opacity 200ms;
+  }
+  .kicker .kicker-link:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  :global(.cf-hidden) {
+    visibility: hidden;
   }
   .name {
     font-family: 'Space Grotesk', sans-serif;
