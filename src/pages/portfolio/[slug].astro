@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import CornerFrame from '../../components/CornerFrame.astro';
 import FileIndex from '../../components/FileIndex.astro';
 import MetaBar from '../../components/MetaBar.astro';
-import { getBuildMeta } from '../../lib/buildMeta';
+import { getLegacyBuildMeta as getBuildMeta } from '../../lib/buildMeta';
 
 export async function getStaticPaths() {
   const projects = await getCollection('portfolio');

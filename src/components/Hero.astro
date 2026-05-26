@@ -3,7 +3,7 @@ import CornerFrame from './CornerFrame.astro';
 import MetaBar from './MetaBar.astro';
 import FileIndex from './FileIndex.astro';
 import GlyphStrip from './GlyphStrip.astro';
-import { getBuildMeta } from '../lib/buildMeta';
+import { getLegacyBuildMeta as getBuildMeta } from '../lib/buildMeta';
 
 const meta = getBuildMeta();
 ---
