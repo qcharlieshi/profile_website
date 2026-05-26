@@ -40,9 +40,9 @@ const promptPath = pathname === '/' ? '~/about' : `~${pathname.replace(/\/$/, ''
     <span class="pill on">CMD</span>
     <span class="dim">PATH</span><span class="y" data-term-status-path>{pathname === '/' ? '/about' : pathname.replace(/\/$/, '')}</span>
     <span class="dim">SECTOR</span><span class="y" data-term-status-sector>{sector.num}/{sector.total}</span>
-    <span class="dim">COMMIT</span><span class="b">{(meta as any).shortHash ?? (meta as any).hash}</span>
+    <span class="commit-field"><span class="dim">COMMIT</span> <span class="b">{meta.shortHash}</span></span>
     <span class="sp"></span>
-    <span class="dim">{(meta as any).buildDate ?? (meta as any).date}</span>
+    <span class="dim">{meta.buildDate}</span>
   </div>
   <div class="term-output" data-term-output aria-live="polite"></div>
 </header>
@@ -116,5 +116,6 @@ const promptPath = pathname === '/' ? '~/about' : `~${pathname.replace(/\/$/, ''
     .row { padding: 7px 14px; gap: 8px; }
     .status-row { padding: 4px 14px; font-size: 9px; gap: 10px; flex-wrap: wrap; }
     .hint { display: none; }
+    .commit-field { display: none; }
   }
 </style>

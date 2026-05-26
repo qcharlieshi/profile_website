@@ -99,7 +99,12 @@ function swapPane(targetKey: PaneKey, targetSector: string, targetPath: string):
     slots.forEach(slot => {
       const isTarget = slot.dataset.paneSlot === targetKey;
       slot.dataset.active = String(isTarget);
-      if (isTarget) slot.scrollTo({ top: 0 });
+      if (isTarget) {
+        slot.removeAttribute('aria-hidden');
+        slot.querySelector('.pane')?.scrollTo({ top: 0 });
+      } else {
+        slot.setAttribute('aria-hidden', 'true');
+      }
     });
 
     // Update rail active state
@@ -198,8 +203,16 @@ function runCommand(raw: string, output: HTMLElement): void {
     case 'cd': {
       const target = args[0] ?? '/';
       const r = getRouteByKeyword(target) ?? getRouteByPath(target);
-      if (r) navigate(r);
-      else termPrint(output, `cd: no such route: <b>${target}</b>`, 'err');
+      if (r) { navigate(r); return; }
+      // Fall back: subroute under a known prefix (e.g. /portfolio/genzed)
+      if (target.startsWith('/portfolio/') || target.startsWith('/blog/')) {
+        const path = target.endsWith('/') ? target : target + '/';
+        // Synthesize a RouteEntry so navigate() can wrap the transition.
+        const parent = target.startsWith('/portfolio/') ? ROUTES[2] : ROUTES[3];
+        navigate({ pathname: path, sector: parent.sector, label: parent.label });
+        return;
+      }
+      termPrint(output, `cd: no such route: <b>${target}</b>`, 'err');
       return;
     }
     case 'ls':
@@ -282,7 +295,10 @@ function initPopstate(): void {
     if (!r || !r.paneKey) return;
     // Skip transition on back/forward — just snap.
     $$<HTMLElement>('[data-pane-slot]').forEach(slot => {
-      slot.dataset.active = String(slot.dataset.paneSlot === r.paneKey);
+      const isTarget = slot.dataset.paneSlot === r.paneKey;
+      slot.dataset.active = String(isTarget);
+      if (isTarget) slot.removeAttribute('aria-hidden');
+      else slot.setAttribute('aria-hidden', 'true');
     });
     $$<HTMLAnchorElement>('[data-rail-link]').forEach(a => {
       a.classList.toggle('active', a.dataset.key === r.paneKey);

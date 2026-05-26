@@ -35,10 +35,10 @@ const sector = initialPane === 'about' ? '01' : '02';
       <div class="pane-container" data-pane-container>
         <PaneTransition />
         <div class="pane-frame" data-pane-frame>
-          <div class="pane-slot" data-pane-slot="about" data-active={initialPane === 'about' ? 'true' : 'false'}>
+          <div class="pane-slot" data-pane-slot="about" data-active={initialPane === 'about' ? 'true' : 'false'} aria-hidden={initialPane !== 'about'}>
             <AboutPane />
           </div>
-          <div class="pane-slot" data-pane-slot="resume" data-active={initialPane === 'resume' ? 'true' : 'false'}>
+          <div class="pane-slot" data-pane-slot="resume" data-active={initialPane === 'resume' ? 'true' : 'false'} aria-hidden={initialPane !== 'resume'}>
             <ResumePane />
           </div>
         </div>
