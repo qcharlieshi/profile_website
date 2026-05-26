@@ -9,8 +9,6 @@ export default {
         'bg-elevated': '#1c1c1f',
         'text-primary': '#e8e8e8',
         'text-secondary': '#8a8a90',
-        'accent-cyan': '#00f0ff',
-        'accent-magenta': '#ff2d6b',
         'accent-yellow': '#ffd23f',
         'accent-blue': '#1860ff',
         'border-default': '#2a2a2e',

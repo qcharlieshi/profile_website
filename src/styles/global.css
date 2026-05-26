@@ -11,9 +11,6 @@
     --text-secondary: #8a8a90;
     --accent-yellow: #ffd23f;
     --accent-blue: #1860ff;
-    /* Deprecated — removed in Task 13 after all consumers migrate. */
-    --accent-cyan: #00f0ff;
-    --accent-magenta: #ff2d6b;
     --border: #2a2a2e;
     --frame-pad: 48px;
     --frame-pad-sm: 24px;
@@ -48,34 +45,6 @@
   opacity: 0.04;
 }
 
-.scan-lines::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(255, 255, 255, 0.03) 2px,
-    rgba(255, 255, 255, 0.03) 4px
-  );
-  z-index: 1;
-}
-
-.dot-grid {
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.reg-mark::before {
-  content: '+';
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  color: var(--accent-cyan);
-  opacity: 0.4;
-}
-
 .dither-divider {
   height: 4px;
   background-image: repeating-linear-gradient(
@@ -85,46 +54,6 @@
     transparent 2px,
     transparent 4px
   );
-}
-
-@keyframes glitch {
-  0%, 100% {
-    clip-path: inset(0 0 0 0);
-    transform: translate(0);
-  }
-  20% {
-    clip-path: inset(20% 0 60% 0);
-    transform: translate(-2px, 1px);
-  }
-  40% {
-    clip-path: inset(60% 0 10% 0);
-    transform: translate(2px, -1px);
-  }
-  60% {
-    clip-path: inset(30% 0 40% 0);
-    transform: translate(-1px, -1px);
-  }
-  80% {
-    clip-path: inset(80% 0 5% 0);
-    transform: translate(1px, 2px);
-  }
-}
-
-.glitch-hover {
-  position: relative;
-}
-
-.glitch-hover:hover {
-  animation: glitch 0.3s ease-in-out;
-}
-
-@keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.05); }
-  50% { box-shadow: 0 0 30px rgba(0, 240, 255, 0.15); }
-}
-
-.glow-pulse {
-  animation: glow-pulse 3s ease-in-out infinite;
 }
 
 .section-label {
