@@ -67,8 +67,8 @@ const items: Item[] = Array.from({ length: total }, () => {
     justify-items: center;
   }
 
-  .gs-stretch.gs-v { height: 100%; justify-content: space-between; }
-  .gs-stretch.gs-h { display: flex; width: 100%; justify-content: space-between; align-items: center; letter-spacing: 0; }
+  .gs-stretch.gs-v { height: 100%; justify-content: space-between; gap: 0; overflow: hidden; }
+  .gs-stretch.gs-h { display: flex; width: 100%; justify-content: space-between; align-items: center; letter-spacing: 0; gap: 0; overflow: hidden; }
 
   .gs-glitch span {
     display: inline-block;

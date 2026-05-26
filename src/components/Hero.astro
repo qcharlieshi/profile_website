@@ -52,6 +52,10 @@ const sector = initialPane === 'about' ? '01' : '02';
         </div>
       </div>
 
+      <div class="top-rail" aria-hidden="true">
+        <GlyphStrip direction="h" count={22} gap={6} glitch stretch />
+      </div>
+
       <RightRail activeKey={initialPane} />
 
       <div class="name-block" data-cf-text="name-block">
@@ -140,7 +144,7 @@ const sector = initialPane === 'about' ? '01' : '02';
   .glyphs {
     position: absolute;
     top: 48px;
-    bottom: 48px;
+    bottom: 84px;
     left: 26px;
     display: flex;
     align-items: stretch;
@@ -245,6 +249,7 @@ const sector = initialPane === 'about' ? '01' : '02';
     display: flex;
     align-items: center;
   }
+  .top-rail { display: none; }
   .meta-bar .meta-coords { color: var(--accent-yellow); }
   .meta-bar .meta-sep { color: var(--text-secondary); }
   .meta-bar .meta-coords-val {
@@ -281,6 +286,18 @@ const sector = initialPane === 'about' ? '01' : '02';
     .name .name-zh { font-size: 56px; }
     .kicker { font-size: 9px; margin-bottom: 10px; }
     .meta-bar { bottom: 13px; height: 14px; left: 40px; right: 40px; }
-    .meta-rail { bottom: 56px; left: 32px; right: 32px; height: 12px; }
+    .meta-rail { bottom: 56px; left: 40px; right: 40px; height: 12px; overflow: hidden; }
+    .meta-rail :global(.gs > span:nth-child(n+20)) { display: none; }
+    .top-rail {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: 38px;
+      left: 40px;
+      right: 40px;
+      height: 12px;
+      overflow: hidden;
+    }
+    .top-rail :global(.gs > span:nth-child(n+20)) { display: none; }
   }
 </style>
