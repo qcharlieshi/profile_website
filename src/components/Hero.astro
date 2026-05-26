@@ -49,7 +49,7 @@ const sector = initialPane === 'about' ? '01' : '02';
       <div class="name-block">
         <div class="kicker">— STAFF AI ENGINEER · LILT AI</div>
         <h1 class="name name-glitch">
-          <span class="name-en">CHARLIE<br/>SHI</span>
+          <span class="name-en">CHARLIE SHI</span>
           <span class="name-zh" lang="zh">石千里</span>
         </h1>
       </div>
@@ -121,10 +121,10 @@ const sector = initialPane === 'about' ? '01' : '02';
 
   .pane-container {
     position: absolute;
-    top: 110px;
-    bottom: 230px;
-    left: 90px;
-    right: 260px;
+    top: 140px;
+    bottom: 270px;
+    left: 130px;
+    right: 300px;
   }
   .pane-frame {
     position: relative;
@@ -151,7 +151,7 @@ const sector = initialPane === 'about' ? '01' : '02';
     position: absolute;
     left: 60px;
     bottom: 70px;
-    max-width: 50%;
+    max-width: 70%;
   }
   .kicker {
     font-family: 'JetBrains Mono', monospace;
@@ -164,15 +164,16 @@ const sector = initialPane === 'about' ? '01' : '02';
   .name {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 800;
-    letter-spacing: 0.06em;
-    font-size: clamp(48px, 8vw, 80px);
+    letter-spacing: 0.04em;
+    font-size: clamp(40px, 6.4vw, 72px);
     line-height: 0.9;
     color: var(--text-primary);
     text-transform: uppercase;
     margin: 0;
+    white-space: nowrap;
   }
   .name .name-zh {
-    font-size: clamp(48px, 8vw, 80px);
+    font-size: clamp(40px, 6.4vw, 72px);
     letter-spacing: 0.06em;
   }
 
@@ -216,13 +217,13 @@ const sector = initialPane === 'about' ? '01' : '02';
     .top-r .commit-sub { display: none; }
     .glyphs { display: none; }
     .pane-container {
-      top: 70px; bottom: 220px; left: 24px; right: 24px;
+      top: 90px; bottom: 240px; left: 40px; right: 40px;
     }
     .pane-frame { padding: 14px 16px; }
     .pane-slot { inset: 14px 16px; }
-    .name-block { left: 24px; bottom: 140px; max-width: 80%; }
-    .name { font-size: 44px; }
-    .name .name-zh { font-size: 44px; }
+    .name-block { left: 24px; bottom: 140px; max-width: 92%; }
+    .name { font-size: 38px; white-space: nowrap; }
+    .name .name-zh { font-size: 38px; }
     .kicker { font-size: 9px; margin-bottom: 8px; }
     .meta-bar { bottom: 16px; left: 24px; right: 24px; }
     .meta-bar .meta-sub { display: none; }

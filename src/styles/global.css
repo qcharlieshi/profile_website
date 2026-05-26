@@ -152,29 +152,61 @@
 .name-glitch > .name-en { animation: glitch-en 7s steps(1, end) infinite; }
 .name-glitch > .name-zh { animation: glitch-zh 7s steps(1, end) infinite; }
 
+/* The switch window (44%→47%) becomes a chaotic strobe — both layers
+   ricochet between visible and invisible, with skewed clip bands and
+   chromatic shadow flicker. Same again at 92%→95% on the way back. */
+
 @keyframes glitch-en {
-  0%, 44%   { opacity: 1; clip-path: inset(0); transform: translate(0,0); text-shadow: none; }
-  44.5%     { opacity: 1; clip-path: inset(45% 0 30% 0); transform: translate(-2px, 0); text-shadow: 2px 0 var(--accent-yellow), -2px 0 var(--accent-blue); }
-  45%       { opacity: 0.6; clip-path: inset(10% 0 65% 0); transform: translate(3px, -1px); text-shadow: -3px 0 var(--accent-yellow), 2px 0 var(--accent-blue); }
-  45.5%     { opacity: 0.4; clip-path: inset(70% 0 5% 0); transform: translate(-2px, 1px); text-shadow: 2px 0 var(--accent-yellow), -2px 0 var(--accent-blue); }
-  46%       { opacity: 0.2; clip-path: inset(25% 0 50% 0); transform: translate(1px, 0); }
-  46.5%, 93%{ opacity: 0; }
-  93.5%     { opacity: 0.2; clip-path: inset(60% 0 20% 0); transform: translate(-1px, 0); text-shadow: 2px 0 var(--accent-yellow), -2px 0 var(--accent-blue); }
-  94%       { opacity: 0.5; clip-path: inset(20% 0 30% 0); transform: translate(2px, -1px); }
-  94.5%     { opacity: 0.8; clip-path: inset(0); transform: translate(0,0); text-shadow: 2px 0 var(--accent-yellow), -2px 0 var(--accent-blue); }
-  95%, 100% { opacity: 1; clip-path: inset(0); transform: translate(0,0); text-shadow: none; }
+  0%, 43.5%   { opacity: 1; clip-path: inset(0); transform: translate(0,0) skewX(0); text-shadow: none; }
+  /* enter switch — strobe */
+  43.8%       { opacity: 0.3; clip-path: inset(60% 0 10% 0); transform: translate(-4px, 1px) skewX(-2deg); text-shadow: 3px 0 var(--accent-yellow), -3px 0 var(--accent-blue); }
+  44.0%       { opacity: 1;   clip-path: inset(5% 0 70% 0);  transform: translate(5px, -2px) skewX(3deg); text-shadow: -4px 0 var(--accent-blue), 3px 0 var(--accent-yellow); }
+  44.2%       { opacity: 0;   }
+  44.4%       { opacity: 0.85;clip-path: inset(35% 0 35% 0); transform: translate(-3px, 2px); text-shadow: 4px 0 #ff3a2f, -3px 0 var(--accent-blue); }
+  44.6%       { opacity: 0.2; clip-path: inset(70% 0 5% 0);  transform: translate(2px, 0) skewX(-4deg); }
+  44.8%       { opacity: 0.95;clip-path: inset(0 0 80% 0);   transform: translate(-2px, -1px); text-shadow: 3px 0 var(--accent-yellow), -2px 0 var(--accent-blue); }
+  45.0%       { opacity: 0;   }
+  45.2%       { opacity: 0.6; clip-path: inset(20% 0 60% 0); transform: translate(4px, 1px) skewX(2deg); text-shadow: -3px 0 var(--accent-blue), 2px 0 #ff3a2f; }
+  45.4%       { opacity: 0.1; clip-path: inset(55% 0 30% 0); transform: translate(-2px, 0); }
+  45.6%       { opacity: 0.4; clip-path: inset(0 0 85% 0);   transform: translate(3px, -2px); text-shadow: 2px 0 var(--accent-yellow), -3px 0 var(--accent-blue); }
+  45.8%       { opacity: 0;   }
+  46.0%       { opacity: 0.25;clip-path: inset(75% 0 0 0);   transform: translate(-1px, 1px) skewX(1deg); }
+  46.3%, 92%  { opacity: 0; }
+  /* exit switch — strobe back in */
+  92.2%       { opacity: 0.3; clip-path: inset(65% 0 15% 0); transform: translate(3px, 0) skewX(2deg); text-shadow: -2px 0 var(--accent-yellow), 3px 0 var(--accent-blue); }
+  92.5%       { opacity: 0;   }
+  92.8%       { opacity: 0.7; clip-path: inset(10% 0 60% 0); transform: translate(-3px, 1px); text-shadow: 3px 0 #ff3a2f, -2px 0 var(--accent-blue); }
+  93.1%       { opacity: 0.15;clip-path: inset(40% 0 40% 0); transform: translate(2px, -1px) skewX(-3deg); }
+  93.5%       { opacity: 0.9; clip-path: inset(0); transform: translate(-2px, 0); text-shadow: 2px 0 var(--accent-yellow), -2px 0 var(--accent-blue); }
+  93.8%       { opacity: 0.4; clip-path: inset(0 0 70% 0); transform: translate(3px, 1px); }
+  94.2%       { opacity: 1;   clip-path: inset(0); transform: translate(0,0); text-shadow: 2px 0 var(--accent-yellow), -2px 0 var(--accent-blue); }
+  94.6%, 100% { opacity: 1; clip-path: inset(0); transform: translate(0,0) skewX(0); text-shadow: none; }
 }
 
 @keyframes glitch-zh {
-  0%, 44%   { opacity: 0; }
-  44.5%     { opacity: 0.2; clip-path: inset(55% 0 25% 0); transform: translate(2px, 0); text-shadow: -2px 0 var(--accent-yellow), 2px 0 var(--accent-blue); }
-  45%       { opacity: 0.5; clip-path: inset(15% 0 60% 0); transform: translate(-3px, 1px); }
-  45.5%     { opacity: 0.8; clip-path: inset(0); transform: translate(2px, 0); text-shadow: -2px 0 var(--accent-yellow), 2px 0 var(--accent-blue); }
-  46%, 93%  { opacity: 1; clip-path: inset(0); transform: translate(0,0); }
-  93.5%     { opacity: 0.6; clip-path: inset(40% 0 35% 0); transform: translate(-2px, 0); text-shadow: -2px 0 var(--accent-yellow), 2px 0 var(--accent-blue); }
-  94%       { opacity: 0.3; clip-path: inset(70% 0 10% 0); transform: translate(3px, -1px); }
-  94.5%     { opacity: 0.1; }
-  95%, 100% { opacity: 0; }
+  0%, 43.8%   { opacity: 0; }
+  /* enter switch — strobe in */
+  44.0%       { opacity: 0;   }
+  44.2%       { opacity: 0.6; clip-path: inset(55% 0 25% 0); transform: translate(3px, 0) skewX(3deg); text-shadow: -3px 0 var(--accent-yellow), 3px 0 var(--accent-blue); }
+  44.4%       { opacity: 0.1; clip-path: inset(10% 0 75% 0); transform: translate(-4px, 2px); }
+  44.6%       { opacity: 0.95;clip-path: inset(30% 0 30% 0); transform: translate(2px, -1px) skewX(-2deg); text-shadow: 3px 0 #ff3a2f, -3px 0 var(--accent-blue); }
+  44.8%       { opacity: 0;   }
+  45.0%       { opacity: 0.7; clip-path: inset(0 0 60% 0); transform: translate(-3px, 1px); text-shadow: -2px 0 var(--accent-yellow), 3px 0 var(--accent-blue); }
+  45.2%       { opacity: 0.3; clip-path: inset(45% 0 35% 0); transform: translate(4px, 0) skewX(2deg); }
+  45.4%       { opacity: 0.85;clip-path: inset(0); transform: translate(-2px, -2px); text-shadow: 3px 0 var(--accent-blue), -2px 0 #ff3a2f; }
+  45.6%       { opacity: 0.5; clip-path: inset(70% 0 5% 0); transform: translate(3px, 1px); }
+  45.8%       { opacity: 1;   clip-path: inset(0); transform: translate(-1px, 0); text-shadow: -2px 0 var(--accent-yellow), 2px 0 var(--accent-blue); }
+  46.0%       { opacity: 0.4; clip-path: inset(20% 0 55% 0); transform: translate(2px, 0) skewX(-1deg); }
+  46.3%, 92%  { opacity: 1; clip-path: inset(0); transform: translate(0,0); text-shadow: none; }
+  /* exit switch — strobe out */
+  92.2%       { opacity: 0.4; clip-path: inset(50% 0 25% 0); transform: translate(-3px, 1px) skewX(-3deg); text-shadow: -3px 0 var(--accent-yellow), 2px 0 var(--accent-blue); }
+  92.5%       { opacity: 0.9; clip-path: inset(0 0 65% 0); transform: translate(3px, 0); text-shadow: 3px 0 #ff3a2f, -3px 0 var(--accent-blue); }
+  92.8%       { opacity: 0;   }
+  93.1%       { opacity: 0.6; clip-path: inset(70% 0 10% 0); transform: translate(-2px, -1px) skewX(2deg); }
+  93.5%       { opacity: 0.2; clip-path: inset(25% 0 50% 0); transform: translate(4px, 1px); text-shadow: -2px 0 var(--accent-yellow), 3px 0 var(--accent-blue); }
+  93.8%       { opacity: 0;   }
+  94.2%       { opacity: 0.1; clip-path: inset(0 0 85% 0); transform: translate(-1px, 0); }
+  94.6%, 100% { opacity: 0; }
 }
 
 /* ============ MARATHON CHECKERBOARD TRANSITION ============ */

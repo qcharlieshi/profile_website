@@ -1,8 +1,6 @@
 ---
 import TerminalHeader from '../components/TerminalHeader.astro';
 import PaneTransition from '../components/PaneTransition.astro';
-import MetaBar from '../components/MetaBar.astro';
-import { getBuildMeta } from '../lib/buildMeta';
 
 interface Props {
   title: string;
@@ -11,7 +9,6 @@ interface Props {
 }
 
 const { title, description = 'Charlie Shi — Staff AI Engineer', ogImage } = Astro.props;
-const meta = getBuildMeta();
 ---
 
 <!doctype html>
@@ -48,17 +45,6 @@ const meta = getBuildMeta();
       <slot />
     </main>
 
-    <footer class="page-foot">
-      <div class="page-foot-inner">
-        <MetaBar
-          date={meta.buildDate}
-          build={meta.shortHash}
-          cta="↗ TOP"
-          ctaHref="#top"
-        />
-      </div>
-    </footer>
-
     <script>
       import '../scripts/site.ts';
     </script>
@@ -70,16 +56,6 @@ const meta = getBuildMeta();
 
   .page-body {
     padding-top: 64px; /* clear the fixed TerminalHeader */
-  }
-
-  .page-foot {
-    border-top: 1px solid var(--border);
-    margin-top: 64px;
-  }
-  .page-foot-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 24px 24px 32px;
   }
 
   @media (max-width: 768px) {
