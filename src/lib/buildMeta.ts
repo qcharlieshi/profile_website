@@ -26,7 +26,7 @@ const SNAPSHOT: BuildMeta = Object.freeze({
   shortHash:  safe('git rev-parse --short HEAD', 'nogit'),
   fullHash:   safe('git rev-parse HEAD', ''),
   subject:    safe('git log -1 --pretty=%s', ''),
-  commitDate: safe('git log -1 --pretty=%as', buildDate.replace(/\./g, '-')),
+  commitDate: safe('git log -1 --pretty=%as', new Date().toISOString().slice(0, 10)),
   branch:     safe('git rev-parse --abbrev-ref HEAD', ''),
   buildDate,
 });
