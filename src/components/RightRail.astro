@@ -1,0 +1,116 @@
+---
+interface Props {
+  activeKey: 'about' | 'resume' | 'portfolio' | 'blog';
+}
+const { activeKey } = Astro.props;
+
+const items = [
+  { key: 'about',     href: '/',           label: 'ABOUT',     sector: '01' },
+  { key: 'resume',    href: '/resume/',    label: 'RESUME',    sector: '02' },
+  { key: 'portfolio', href: '/portfolio/', label: 'PORTFOLIO', sector: '03' },
+  { key: 'blog',      href: '/blog/',      label: 'BLOG',      sector: '04' },
+] as const;
+
+const active = items.find(i => i.key === activeKey)!;
+---
+
+<aside class="rail" data-rail>
+  <div class="sector-display">
+    <div class="sector-lbl">// SECTOR</div>
+    <div>
+      <span class="sector-num" data-rail-sector>{active.sector}</span>
+      <span class="sector-denom">/ 04</span>
+    </div>
+  </div>
+
+  <ul class="rail-list">
+    {items.map((item) => (
+      <li>
+        <a
+          href={item.href}
+          class:list={['rail-item', item.key === activeKey && 'active']}
+          data-rail-link
+          data-key={item.key}
+          data-sector={item.sector}
+        >
+          <span class="caret" aria-hidden="true">▸</span>
+          {item.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</aside>
+
+<style>
+  .rail {
+    position: absolute;
+    top: 130px; right: 56px;
+    width: 180px;
+    z-index: 3;
+  }
+
+  .rail-list { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+
+  .rail-item {
+    display: block;
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    color: #6a6a6e;
+    text-decoration: none;
+    padding: 4px 0;
+    position: relative;
+    transition: color 200ms ease;
+  }
+  .rail-item:hover { color: var(--accent-yellow); }
+  .rail-item.active { color: var(--accent-yellow); }
+  .rail-item .caret {
+    position: absolute;
+    left: -16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent-yellow);
+    font-size: 10px;
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .rail-item.active .caret { opacity: 1; }
+
+  @media (max-width: 768px) {
+    .rail {
+      position: absolute;
+      top: auto; right: 22px; left: 22px;
+      bottom: 80px;
+      width: auto;
+    }
+    .sector-display {
+      display: none; /* sector shown above active label only on mobile */
+    }
+    .rail-list {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 0;
+    }
+    .rail-list li { text-align: center; }
+    .rail-item {
+      text-align: center;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+    }
+    .rail-item.active::before {
+      content: attr(data-sector);
+      display: block;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      color: var(--accent-yellow);
+      letter-spacing: 0;
+      margin-bottom: 2px;
+    }
+    .rail-item .caret { display: none; }
+  }
+</style>
