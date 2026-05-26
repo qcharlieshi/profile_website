@@ -33,17 +33,23 @@ src/
 │       ├── index.astro       # Blog listing (Medium RSS)
 │       └── [slug].astro      # Blog post detail (getStaticPaths)
 ├── components/
-│   ├── Navbar.astro          # Fixed nav, blur backdrop, glitch hover
-│   ├── Hero.astro            # Full-viewport hero, CSS parallax, scan lines
-│   ├── AboutSection.astro    # Bio + experience + links
-│   ├── SectionDivider.astro  # // LABEL with dither divider + reg mark
-│   ├── PortfolioCard.astro   # Project card, dot grid, glow on hover
-│   └── BlogCard.astro        # Blog post preview card
+│   ├── Navbar.astro          # Fixed nav, blur backdrop, file-system brand + corner-tick active link
+│   ├── Hero.astro            # Full-viewport H2 asymmetric layout (corner frame, file index, glyph strip, meta bar)
+│   ├── AboutSection.astro    # Dashed-enclosure prose + stat strips + bracketed link tiles
+│   ├── SectionDivider.astro  # Glyph strip + // LABEL + dither rule + RegMark + optional index counter
+│   ├── PortfolioCard.astro   # Project card, glyph-grid background, corner ticks, [FEATURED] tag
+│   ├── BlogCard.astro        # Blog post preview card (B-prefixed file index, grayscale thumbnail)
+│   ├── CornerFrame.astro     # Yellow corner brackets wrapping a slot — page chrome primitive
+│   ├── MetaBar.astro         # Dashed-top metadata rail (date + coords + build hash + CTA)
+│   ├── FileIndex.astro       # Big yellow display number with mono label
+│   ├── RegMark.astro         # Blue `+` registration crosshair
+│   └── GlyphStrip.astro      # Vertical or horizontal repeating glyphs (× ○ ⊞ + ✕)
 ├── content/
 │   ├── config.ts             # Collections schema (Zod)
 │   └── portfolio/            # One .md file per project (frontmatter + body)
 ├── lib/
-│   └── medium.ts             # Fetch + parse Medium RSS at build time
+│   ├── medium.ts             # Fetch + parse Medium RSS at build time
+│   └── buildMeta.ts          # Module-load-frozen snapshot for MetaBar (date, hex hash, coords)
 ├── types/
 │   └── index.ts              # MediumPost interface
 ├── styles/
@@ -82,11 +88,6 @@ public/
 - Full HTML content rendered in a Tailwind `prose-invert` container via `set:html`
 - Errors return empty array (graceful empty state on listing page)
 
-### Parallax: CSS Only
-
-- `perspective` + `transform: translateZ(-1px) scale(2)` on Hero background layer
-- No scroll listeners, no client JS
-
 ### Imports
 
 - Use **relative imports** in `.astro` files (e.g., `'../components/Navbar.astro'`) — the `@/*` alias is only configured for `tsconfig.json` and may not resolve in all `.astro` contexts.
@@ -109,7 +110,7 @@ npm run preview  # Serve built dist/ locally
 
 ## Key Patterns
 
-- **Zero client JS:** Every visual effect (parallax, glitch, glow, scan lines, noise) is CSS-only
+- **Zero client JS:** Every visual effect (corner brackets, glyph strips, hairlines, scan-line-soft, noise) is CSS-only. EN↔ZH name flicker on the hero uses CSS keyframes only.
 - **Dark mode only:** No light mode toggle
 - **Monospace metadata:** Dates, tags, section labels, nav items use `font-mono` to feel like technical annotations
 - **All-caps display headings:** `text-transform: uppercase` enforced globally on h1-h6 in `global.css`
@@ -118,5 +119,7 @@ npm run preview  # Serve built dist/ locally
 
 ## Documentation
 
-- **Design spec:** `docs/superpowers/specs/2026-04-14-astro-cloudflare-migration-design.md`
-- **Implementation plan:** `docs/superpowers/plans/2026-04-14-astro-cloudflare-migration.md`
+- **Antireal redesign spec:** `docs/superpowers/specs/2026-05-25-antireal-redesign-design.md`
+- **Antireal redesign plan:** `docs/superpowers/plans/2026-05-25-antireal-redesign.md`
+- **Original Astro migration spec:** `docs/superpowers/specs/2026-04-14-astro-cloudflare-migration-design.md`
+- **Original Astro migration plan:** `docs/superpowers/plans/2026-04-14-astro-cloudflare-migration.md`
