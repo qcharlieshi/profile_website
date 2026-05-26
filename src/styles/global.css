@@ -288,6 +288,17 @@
 .rail-item > [data-i18n] > .lg-primary,
 .sector-display .sector-lbl > .lg-primary { margin-inline-end: -0.3em; }
 
+/* The rail is right-aligned, but .lg-alt defaults to left:0 (anchored to the
+   left edge of the primary's box). For a right-aligned context that floats the
+   alt's right edge wherever the (differently-sized) translated glyphs land —
+   most visibly on RESUME → 简历. Re-anchor the alt to the right edge and apply
+   the same trailing-space compensation as the primary so both end at the same x. */
+.rail-item > [data-i18n] > .lg-alt {
+  left: auto;
+  right: 0;
+  margin-inline-end: -0.3em;
+}
+
 /* Three-act burst on an 11s cycle:
    0–43%    idle on primary
    43–45%   transition-out strobe (≈220ms)  → both spans flicker

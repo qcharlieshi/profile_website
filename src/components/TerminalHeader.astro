@@ -41,7 +41,7 @@ const promptPath = pathname === '/' ? '~/about' : `~${pathname.replace(/\/$/, ''
   <div class="row status-row">
     <span class="pill on" data-i18n="term.cmd">CMD</span>
     <span class="dim" data-i18n="term.path">PATH</span><span class="y" data-term-status-path>{pathname === '/' ? '/about' : pathname.replace(/\/$/, '')}</span>
-    <span class="dim" data-i18n="term.sector">SECTOR</span><span class="y" data-term-status-sector>{sector.num}/{sector.total}</span>
+    <span class="sector-field"><span class="dim" data-i18n="term.sector">SECTOR</span> <span class="y" data-term-status-sector>{sector.num}/{sector.total}</span></span>
     <span class="commit-field"><span class="dim" data-i18n="term.commit">COMMIT</span> <span class="b">{meta.shortHash}</span></span>
     <span class="sp"></span>
     <span class="dim credit">↗ AESTHETIC INSPIRATION: <a href="https://antireal.info/" target="_blank" rel="noopener noreferrer" class="y credit-link">ANTIREAL.INFO</a> · <a href="https://marathonthegame.com/" target="_blank" rel="noopener noreferrer" class="b credit-link">BUNGIE MARATHON</a></span>
@@ -148,5 +148,7 @@ const promptPath = pathname === '/' ? '~/about' : `~${pathname.replace(/\/$/, ''
     .status-row { padding: 4px 14px; font-size: 9px; gap: 10px; flex-wrap: wrap; }
     .hint { display: none; }
     .commit-field { display: none; }
+    .sector-field { display: none; }
+    .credit { white-space: nowrap; }
   }
 </style>
