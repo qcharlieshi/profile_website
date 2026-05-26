@@ -27,7 +27,17 @@ function stripHtmlForExcerpt(html: string, maxLength = 200): string {
   return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
 }
 
-export async function getMediumPosts(): Promise<MediumPost[]> {
+let _cache: Promise<MediumPost[]> | null = null;
+
+// Memoized so the four Hero pages (each renders BlogPane) share one RSS
+// fetch per build. The cached promise resolves to [] on failure, matching
+// the graceful-empty behavior below.
+export function getMediumPosts(): Promise<MediumPost[]> {
+  if (!_cache) _cache = fetchMediumPosts();
+  return _cache;
+}
+
+async function fetchMediumPosts(): Promise<MediumPost[]> {
   try {
     const response = await fetch(MEDIUM_FEED_URL);
     const xml = await response.text();

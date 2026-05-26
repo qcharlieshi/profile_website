@@ -37,6 +37,8 @@ export const T: Record<string, Entry> = {
   'meta.loc':       { en: '↳ BOSTON, MA',     zh: '↳ 美国 波士顿',   es: '↳ BOSTON, EE.UU.' },
   'meta.enter':     { en: '↗ ENTER',          zh: '↗ 进入',         es: '↗ ENTRAR' },
   'meta.download':  { en: '↗ DOWNLOAD PDF',   zh: '↗ 下载 PDF',     es: '↗ DESCARGAR PDF' },
+  'meta.github':    { en: '↗ GITHUB',         zh: '↗ GITHUB',       es: '↗ GITHUB' },
+  'meta.medium':    { en: '↗ MEDIUM',         zh: '↗ MEDIUM',       es: '↗ MEDIUM' },
 
   // ===== Right rail =====
   'rail.sector':    { en: '// SECTOR',    zh: '// 扇区',     es: '// SECTOR' },
@@ -81,6 +83,10 @@ export const T: Record<string, Entry> = {
   // ===== Section dividers =====
   'sec.portfolio': { en: 'PORTFOLIO', zh: '作品集',  es: 'PORTAFOLIO' },
   'sec.blog':      { en: 'BLOG',      zh: '博客',    es: 'BLOG' },
+
+  // ===== Portfolio / Blog panes =====
+  'portfolio.label': { en: '// PORTFOLIO', zh: '// 作品集', es: '// PORTAFOLIO' },
+  'blog.label':      { en: '// BLOG',      zh: '// 博客',   es: '// BLOG' },
   'blog.empty':    { en: '// NO POSTS FOUND — CHECK MEDIUM FEED', zh: '// 未找到文章 — 请检查 MEDIUM 源', es: '// SIN PUBLICACIONES — REVISAR MEDIUM' },
 
   // ===== Terminal command output =====
