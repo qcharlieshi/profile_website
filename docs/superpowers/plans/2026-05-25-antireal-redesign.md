@@ -59,6 +59,9 @@ Replace lines 5–16 with:
     --text-secondary: #8a8a90;
     --accent-yellow: #ffd23f;
     --accent-blue: #1860ff;
+    /* Deprecated — removed in Task 13 after all consumers migrate. */
+    --accent-cyan: #00f0ff;
+    --accent-magenta: #ff2d6b;
     --border: #2a2a2e;
     --frame-pad: 48px;
     --frame-pad-sm: 24px;
@@ -67,7 +70,7 @@ Replace lines 5–16 with:
   }
 ```
 
-(Note: `--accent-cyan` and `--accent-magenta` are intentionally omitted. They will be removed from Tailwind in Task 13 after all consumers are migrated. Leave the rest of the `@layer base` block intact below `}` line 16.)
+(Note: `--accent-cyan` and `--accent-magenta` stay during migration — `.reg-mark::before` and other rules still reference them via `var()`. They're removed in Task 13 together with the consuming CSS rules. Leave the rest of the `@layer base` block intact below `}` line 16.)
 
 - [ ] **Step 3: Update `tailwind.config.mjs` colors block**
 
