@@ -3,15 +3,47 @@ interface Props {
   direction?: 'v' | 'h';
   count?: number;
   gap?: number;
+  cols?: number;
+  glitch?: boolean;
+  stretch?: boolean;
 }
 
-const { direction = 'v', count = 7, gap = 10 } = Astro.props;
-const glyphs = ['×', '○', '⊞', '+', '✕'];
-const items = Array.from({ length: count }, (_, i) => glyphs[i % glyphs.length]);
+const {
+  direction = 'v',
+  count = 7,
+  gap = 10,
+  cols = 1,
+  glitch = false,
+  stretch = false,
+} = Astro.props;
+
+const palette = ['×', '○', '⊞', '+', '✕', '⊟', '◇'];
+const total = direction === 'v' ? count * cols : count;
+
+type Item = { g: string; c: 'y' | 'b' | 'n'; d: string; t: string };
+
+const items: Item[] = Array.from({ length: total }, () => {
+  const r = Math.random();
+  const c: 'y' | 'b' | 'n' = r < 0.4 ? 'y' : r < 0.8 ? 'b' : 'n';
+  return {
+    g: palette[Math.floor(Math.random() * palette.length)],
+    c,
+    d: (Math.random() * 22).toFixed(2),
+    t: (16 + Math.random() * 14).toFixed(2),
+  };
+});
 ---
 
-<div class:list={['gs', `gs-${direction}`]} style={`gap:${gap}px;`}>
-  {items.map((g) => <span>{g}</span>)}
+<div
+  class:list={['gs', `gs-${direction}`, glitch && 'gs-glitch', stretch && 'gs-stretch']}
+  style={`--gs-gap:${gap}px;--gs-cols:${cols};`}
+>
+  {items.map((it) => (
+    <span
+      class:list={[glitch && `flick-${it.c}`]}
+      style={glitch ? `--d:${it.d}s;--t:${it.t}s;` : undefined}
+    >{it.g}</span>
+  ))}
 </div>
 
 <style>
@@ -21,7 +53,62 @@ const items = Array.from({ length: count }, (_, i) => glyphs[i % glyphs.length])
     font-size: 13px;
     letter-spacing: 0.2em;
     color: var(--text-secondary);
+    gap: var(--gs-gap);
   }
   .gs-v { flex-direction: column; }
   .gs-h { flex-direction: row; }
+
+  /* Multi-column vertical grid: thicken the strip */
+  .gs-v[style*="--gs-cols"]:not([style*="--gs-cols:1"]) {
+    display: grid;
+    grid-template-columns: repeat(var(--gs-cols), auto);
+    grid-auto-flow: column;
+    align-content: space-between;
+    justify-items: center;
+  }
+
+  .gs-stretch.gs-v { height: 100%; justify-content: space-between; }
+  .gs-stretch.gs-h { display: flex; width: 100%; justify-content: space-between; align-items: center; }
+
+  .gs-glitch span {
+    display: inline-block;
+    color: var(--text-secondary);
+    will-change: color, transform, text-shadow, opacity;
+    animation-duration: var(--t, 20s);
+    animation-delay: var(--d, 0s);
+    animation-timing-function: steps(1, end);
+    animation-iteration-count: infinite;
+  }
+  .gs-glitch .flick-y { animation-name: glyph-hold-y; }
+  .gs-glitch .flick-b { animation-name: glyph-hold-b; }
+  .gs-glitch .flick-n { animation-name: glyph-hold-n; }
+
+  /* Long hold in secondary, brief glitch transition, long hold in accent. */
+  @keyframes glyph-hold-y {
+    0%, 28% { color: var(--text-secondary); opacity: 0.7; text-shadow: none; transform: none; }
+    29% { color: var(--accent-yellow); opacity: 1; text-shadow: 2px 0 var(--accent-blue), -1px 0 #ff3a2f; transform: translate(-1px, 0); }
+    30% { color: var(--accent-yellow); opacity: 0.45; transform: translate(2px, 0); }
+    31% { color: var(--accent-yellow); opacity: 1; text-shadow: 1px 0 var(--accent-blue); transform: none; }
+    32%, 96% { color: var(--accent-yellow); opacity: 1; text-shadow: none; transform: none; }
+    97% { color: var(--accent-yellow); opacity: 0.4; text-shadow: -2px 0 var(--accent-blue); transform: translate(1px, 0); }
+    98% { color: var(--text-secondary); opacity: 0.9; text-shadow: 1px 0 var(--accent-yellow); }
+    99%, 100% { color: var(--text-secondary); opacity: 0.7; text-shadow: none; transform: none; }
+  }
+  @keyframes glyph-hold-b {
+    0%, 44% { color: var(--text-secondary); opacity: 0.7; text-shadow: none; transform: none; }
+    45% { color: var(--accent-blue); opacity: 1; text-shadow: -2px 0 var(--accent-yellow), 1px 0 #ff3a2f; transform: translate(1px, 0); }
+    46% { color: var(--accent-blue); opacity: 0.45; transform: translate(-2px, 0); }
+    47% { color: var(--accent-blue); opacity: 1; text-shadow: -1px 0 var(--accent-yellow); transform: none; }
+    48%, 96% { color: var(--accent-blue); opacity: 1; text-shadow: none; transform: none; }
+    97% { color: var(--accent-blue); opacity: 0.4; text-shadow: 2px 0 var(--accent-yellow); transform: translate(-1px, 0); }
+    98% { color: var(--text-secondary); opacity: 0.9; text-shadow: -1px 0 var(--accent-blue); }
+    99%, 100% { color: var(--text-secondary); opacity: 0.7; text-shadow: none; transform: none; }
+  }
+  @keyframes glyph-hold-n {
+    0%, 100% { color: var(--text-secondary); opacity: 0.5; }
+    49% { opacity: 0.5; }
+    50% { opacity: 0.15; }
+    51% { opacity: 0.7; }
+    52% { opacity: 0.5; }
+  }
 </style>

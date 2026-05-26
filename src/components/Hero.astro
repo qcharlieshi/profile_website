@@ -29,7 +29,7 @@ const sector = initialPane === 'about' ? '01' : '02';
       </div>
 
       <div class="glyphs">
-        <GlyphStrip direction="v" count={13} gap={18} />
+        <GlyphStrip direction="v" count={22} gap={18} glitch stretch />
       </div>
 
       <div class="pane-container" data-pane-container>
@@ -52,6 +52,10 @@ const sector = initialPane === 'about' ? '01' : '02';
           <span class="name-en">CHARLIE SHI</span>
           <span class="name-zh" lang="zh">石千里</span>
         </h1>
+      </div>
+
+      <div class="meta-rail">
+        <GlyphStrip direction="h" count={42} gap={10} glitch stretch />
       </div>
 
       <div class="meta-bar">
@@ -127,11 +131,12 @@ const sector = initialPane === 'about' ? '01' : '02';
 
   .glyphs {
     position: absolute;
-    top: 90px;
-    left: 30px;
-    height: 70%;
+    top: 48px;
+    bottom: 48px;
+    left: 26px;
     display: flex;
     align-items: stretch;
+    justify-content: center;
   }
   .glyphs :global(.gs) {
     height: 100%;
@@ -210,13 +215,13 @@ const sector = initialPane === 'about' ? '01' : '02';
     text-transform: uppercase;
     color: var(--text-secondary);
   }
-  .meta-bar::before {
-    content: '';
+  .meta-rail {
     position: absolute;
-    left: 0; right: 0;
-    bottom: 100%;
-    margin-bottom: 8px;
-    border-top: 1px dashed var(--border);
+    left: 60px; right: 60px;
+    bottom: 48px;
+    height: 14px;
+    display: flex;
+    align-items: center;
   }
   .meta-bar .meta-coords { color: var(--accent-yellow); }
   .meta-bar .meta-sep { color: var(--text-secondary); }
@@ -252,6 +257,6 @@ const sector = initialPane === 'about' ? '01' : '02';
     .name .name-zh { font-size: 38px; }
     .kicker { font-size: 9px; margin-bottom: 8px; }
     .meta-bar { bottom: 13px; height: 14px; left: 24px; right: 24px; }
-    .meta-bar::before { margin-bottom: 6px; }
+    .meta-rail { bottom: 35px; left: 24px; right: 24px; height: 12px; }
   }
 </style>
