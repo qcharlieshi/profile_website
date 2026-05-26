@@ -1,46 +1,124 @@
 ---
 import type { MediumPost } from '../types/index';
+import FileIndex from './FileIndex.astro';
 
 interface Props {
   post: MediumPost;
+  index: number;
 }
 
-const { post } = Astro.props;
+const { post, index } = Astro.props;
+const paddedIndex = `B${String(index).padStart(3, '0')}`;
 
-const date = new Date(post.pubDate).toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
-});
+const d = new Date(post.pubDate);
+const yy = String(d.getFullYear()).slice(-2);
+const mm = String(d.getMonth() + 1).padStart(2, '0');
+const dd = String(d.getDate()).padStart(2, '0');
+const dateLabel = `${yy}.${mm}.${dd}`;
 ---
 
-<a
-  href={`/blog/${post.slug}/`}
-  class="block bg-bg-surface border border-border-default p-6 transition-all duration-300 dot-grid hover:border-accent-cyan hover:shadow-[0_0_20px_rgba(0,240,255,0.1)]"
->
+<a href={`/blog/${post.slug}/`} class="card glyph-grid">
+  <div class="card-top">
+    <FileIndex index={paddedIndex} size="md" />
+    <div class="card-kicker">— {post.categories[0]?.toUpperCase() ?? 'TRANSMISSION'}</div>
+    <h3 class="card-title">{post.title}</h3>
+  </div>
+
   {post.thumbnail && (
     <img
       src={post.thumbnail}
       alt={post.title}
-      class="w-full h-48 object-cover mb-4 grayscale hover:grayscale-0 transition-all duration-500"
+      class="card-thumb"
       loading="lazy"
     />
   )}
 
-  <h3 class="font-display text-lg font-bold tracking-wider mb-2 glitch-hover">{post.title}</h3>
+  <p class="card-desc">{post.description}</p>
 
-  <p class="text-sm text-text-secondary leading-relaxed mb-4 line-clamp-3">
-    {post.description}
-  </p>
-
-  <div class="flex items-center justify-between">
-    <span class="font-mono text-[10px] text-text-secondary tracking-widest">{date}</span>
-    <div class="flex gap-2">
-      {post.categories.slice(0, 3).map((cat) => (
-        <span class="font-mono text-[10px] text-accent-magenta tracking-widest uppercase">
-          {cat}
-        </span>
-      ))}
-    </div>
+  <div class="card-meta">
+    <span>{dateLabel}</span>
+    {post.categories.slice(0, 3).map((c) => <span>{c.toUpperCase()}</span>)}
+    <span class="cta">↗ READ</span>
   </div>
+
+  <span class="corner corner-tl" aria-hidden="true"></span>
+  <span class="corner corner-br" aria-hidden="true"></span>
 </a>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    padding: 22px;
+    min-height: 220px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 200ms ease;
+  }
+  .card:hover { border-color: var(--accent-yellow); }
+
+  .card-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-primary);
+    margin: 14px 0 0;
+  }
+  .card-thumb {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    margin: 14px 0;
+    filter: grayscale(1) brightness(0.85);
+    transition: filter 300ms ease;
+  }
+  .card:hover .card-thumb { filter: grayscale(0.6) brightness(0.95); }
+  .card-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .card-meta {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-top: 14px;
+  }
+  .card-meta .cta { margin-left: auto; color: var(--accent-yellow); }
+
+  .corner {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid var(--accent-yellow);
+    opacity: 0.4;
+    transition: opacity 200ms ease;
+  }
+  .corner-tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+  .corner-br { bottom: 0; right: 0; border-left: none; border-top: none; }
+  .card:hover .corner { opacity: 1; }
+</style>
