@@ -5,14 +5,17 @@
 @layer base {
   :root {
     --bg-primary: #0a0a0a;
-    --bg-surface: #141414;
-    --bg-elevated: #1e1e1e;
+    --bg-surface: #141416;
+    --bg-elevated: #1c1c1f;
     --text-primary: #e8e8e8;
-    --text-secondary: #888888;
-    --accent-cyan: #00f0ff;
-    --accent-magenta: #ff2d6b;
+    --text-secondary: #8a8a90;
     --accent-yellow: #ffd23f;
-    --border: #2a2a2a;
+    --accent-blue: #1860ff;
+    --border: #2a2a2e;
+    --frame-pad: 48px;
+    --frame-pad-sm: 24px;
+    --rule-thin: 1px;
+    --rule-mark: 1.5px;
   }
 
   html {

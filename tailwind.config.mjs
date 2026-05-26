@@ -5,14 +5,15 @@ export default {
     extend: {
       colors: {
         'bg-primary': '#0a0a0a',
-        'bg-surface': '#141414',
-        'bg-elevated': '#1e1e1e',
+        'bg-surface': '#141416',
+        'bg-elevated': '#1c1c1f',
         'text-primary': '#e8e8e8',
-        'text-secondary': '#888888',
+        'text-secondary': '#8a8a90',
         'accent-cyan': '#00f0ff',
         'accent-magenta': '#ff2d6b',
         'accent-yellow': '#ffd23f',
-        'border-default': '#2a2a2a',
+        'accent-blue': '#1860ff',
+        'border-default': '#2a2a2e',
       },
       fontFamily: {
         display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
