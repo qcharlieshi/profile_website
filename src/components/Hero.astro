@@ -1,45 +1,70 @@
 ---
 import CornerFrame from './CornerFrame.astro';
-import MetaBar from './MetaBar.astro';
-import FileIndex from './FileIndex.astro';
 import GlyphStrip from './GlyphStrip.astro';
-import { getLegacyBuildMeta as getBuildMeta } from '../lib/buildMeta';
+import RightRail from './RightRail.astro';
+import PaneTransition from './PaneTransition.astro';
+import AboutPane from './panes/AboutPane.astro';
+import ResumePane from './panes/ResumePane.astro';
+import { getBuildMeta } from '../lib/buildMeta';
 
+interface Props {
+  initialPane: 'about' | 'resume';
+}
+const { initialPane } = Astro.props;
 const meta = getBuildMeta();
+
+const sector = initialPane === 'about' ? '01' : '02';
 ---
 
-<section class="hero glyph-grid">
+<section class="hero glyph-grid" data-hero data-initial-pane={initialPane}>
   <CornerFrame inset={18}>
     <div class="hero-inner">
       <div class="top-l">// PORTFOLIO.SYS — REV 2026.05</div>
-      <div class="top-r">SECTOR 01/03</div>
 
-      <div class="file-anchor">
-        <FileIndex index="01" label="FILE INDEX" size="lg" />
+      <div class="top-r">
+        <div class="commit-line">
+          <b>{meta.shortHash}</b>LATEST COMMIT
+        </div>
+        {meta.subject && <div class="commit-sub" title={meta.subject}>"{meta.subject}"</div>}
       </div>
 
       <div class="glyphs">
-        <GlyphStrip direction="v" count={7} gap={14} />
+        <GlyphStrip direction="v" count={13} gap={18} />
       </div>
+
+      <div class="pane-container" data-pane-container>
+        <PaneTransition />
+        <div class="pane-frame" data-pane-frame>
+          <div class="pane-slot" data-pane-slot="about" data-active={initialPane === 'about'}>
+            <AboutPane />
+          </div>
+          <div class="pane-slot" data-pane-slot="resume" data-active={initialPane === 'resume'}>
+            <ResumePane />
+          </div>
+        </div>
+      </div>
+
+      <RightRail activeKey={initialPane} />
 
       <div class="name-block">
         <div class="kicker">— STAFF AI ENGINEER · LILT AI</div>
-        <h1 class="name">
-          <span class="name-flicker h2">
-            <span class="name-en">CHARLIE<br />SHI</span>
-            <span class="name-zh" lang="zh">石千里</span>
-          </span>
+        <h1 class="name name-glitch">
+          <span class="name-en">CHARLIE<br/>SHI</span>
+          <span class="name-zh" lang="zh">石千里</span>
         </h1>
       </div>
 
-      <div class="meta-anchor">
-        <MetaBar
-          date={meta.date}
-          coords={meta.coords}
-          build={meta.hash}
-          cta="↗ ENTER"
-          ctaHref="#about"
-        />
+      <div class="meta-bar">
+        <span class="meta-date">↳ {meta.buildDate}</span>
+        <span class="meta-sep">·</span>
+        <span class="meta-hash">{meta.shortHash}</span>
+        {meta.subject && (
+          <span class="meta-sub" title={meta.subject}>"{meta.subject}"</span>
+        )}
+        <span class="sp"></span>
+        <a class="meta-cta" href={initialPane === 'about' ? '#about' : '/resume.pdf'} data-cta-href>
+          {initialPane === 'about' ? '↗ ENTER' : '↗ DOWNLOAD PDF'}
+        </a>
       </div>
     </div>
   </CornerFrame>
@@ -61,6 +86,7 @@ const meta = getBuildMeta();
     width: 100%;
     height: 100%;
   }
+
   .top-l, .top-r {
     position: absolute;
     top: 30px;
@@ -68,21 +94,23 @@ const meta = getBuildMeta();
     font-size: 11px;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--accent-yellow);
   }
-  .top-l { left: 60px; }
-  .top-r { right: 60px; }
+  .top-l { left: 60px; color: var(--accent-yellow); }
+  .top-r { right: 60px; text-align: right; }
+  .top-r .commit-line { font-size: 10px; letter-spacing: 0.12em; color: var(--text-secondary); }
+  .top-r .commit-line b { color: var(--accent-blue); font-weight: 700; margin-right: 6px; }
+  .top-r .commit-sub {
+    font-size: 9px; color: #6a6a6e; letter-spacing: 0.1em;
+    margin-top: 3px;
+    max-width: 280px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
 
-  .file-anchor {
-    position: absolute;
-    top: 90px;
-    right: 60px;
-  }
   .glyphs {
     position: absolute;
     top: 90px;
     left: 30px;
-    height: 60%;
+    height: 70%;
     display: flex;
     align-items: stretch;
   }
@@ -91,11 +119,39 @@ const meta = getBuildMeta();
     justify-content: space-between;
   }
 
+  .pane-container {
+    position: absolute;
+    top: 110px;
+    bottom: 230px;
+    left: 90px;
+    right: 260px;
+  }
+  .pane-frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: 1px dashed #3a3a3e;
+    padding: 22px 28px;
+    background: rgba(10,10,10,0.55);
+    overflow: hidden;
+  }
+  .pane-slot {
+    position: absolute;
+    inset: 22px 28px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms;
+  }
+  .pane-slot[data-active="true"] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
   .name-block {
     position: absolute;
     left: 60px;
     bottom: 70px;
-    max-width: 60%;
+    max-width: 50%;
   }
   .kicker {
     font-family: 'JetBrains Mono', monospace;
@@ -108,28 +164,67 @@ const meta = getBuildMeta();
   .name {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 800;
-    letter-spacing: 0.08em;
-    font-size: clamp(48px, 9vw, 92px);
+    letter-spacing: 0.06em;
+    font-size: clamp(48px, 8vw, 80px);
     line-height: 0.9;
     color: var(--text-primary);
     text-transform: uppercase;
     margin: 0;
   }
+  .name .name-zh {
+    font-size: clamp(48px, 8vw, 80px);
+    letter-spacing: 0.06em;
+  }
 
-  .meta-anchor {
+  .meta-bar {
     position: absolute;
     bottom: 30px;
-    left: 60px;
-    right: 60px;
+    left: 60px; right: 60px;
+    border-top: 1px dashed var(--border);
+    padding-top: 10px;
+    display: flex;
+    gap: 18px;
+    align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
   }
+  .meta-bar .meta-date { color: var(--accent-yellow); }
+  .meta-bar .meta-sep { color: var(--text-secondary); }
+  .meta-bar .meta-hash { color: var(--accent-blue); font-weight: 700; }
+  .meta-bar .meta-sub {
+    color: #6a6a6e;
+    max-width: 320px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    text-transform: none;
+    letter-spacing: 0.05em;
+  }
+  .meta-bar .sp { flex: 1; }
+  .meta-bar .meta-cta {
+    color: var(--accent-yellow);
+    text-decoration: none;
+    transition: opacity 200ms;
+  }
+  .meta-bar .meta-cta:hover { opacity: 0.7; }
 
   @media (max-width: 768px) {
     .top-l, .top-r { top: 18px; font-size: 9px; letter-spacing: 0.18em; }
     .top-l { left: 24px; }
     .top-r { right: 24px; }
-    .file-anchor { top: 60px; right: 24px; }
+    .top-r .commit-sub { display: none; }
     .glyphs { display: none; }
-    .name-block { left: 24px; bottom: 60px; max-width: 80%; }
-    .meta-anchor { bottom: 18px; left: 24px; right: 24px; }
+    .pane-container {
+      top: 70px; bottom: 220px; left: 24px; right: 24px;
+    }
+    .pane-frame { padding: 14px 16px; }
+    .pane-slot { inset: 14px 16px; }
+    .name-block { left: 24px; bottom: 140px; max-width: 80%; }
+    .name { font-size: 44px; }
+    .name .name-zh { font-size: 44px; }
+    .kicker { font-size: 9px; margin-bottom: 8px; }
+    .meta-bar { bottom: 16px; left: 24px; right: 24px; }
+    .meta-bar .meta-sub { display: none; }
   }
 </style>
