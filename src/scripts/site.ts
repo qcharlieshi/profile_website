@@ -139,7 +139,7 @@ function swapPane(targetKey: PaneKey, targetSector: string, targetPath: string):
 
 // ============ NAV DISPATCH ============
 
-function navigate(route: RouteEntry, opts: { fromPopstate?: boolean } = {}): void {
+function navigate(route: RouteEntry): void {
   if (route.paneKey && getRouteByPath(location.pathname)?.paneKey) {
     // Both source and dest are hero panes → in-place swap.
     swapPane(route.paneKey, route.sector, route.pathname);
@@ -151,20 +151,13 @@ function navigate(route: RouteEntry, opts: { fromPopstate?: boolean } = {}): voi
     location.href = route.pathname;
     return;
   }
-  fireTransition('global').then(() => {
-    // Navigate just before ramp-down finishes so the new page paints under the checker.
-  });
+  // Fire transition (runs to ~600ms); we navigate at 300ms so the new
+  // page paints under the darkest checker frame.
+  fireTransition('global');
   setTimeout(() => { location.href = route.pathname; }, 300);
 }
 
 // ============ TERMINAL ============
-
-interface CmdContext {
-  raw: string;
-  cmd: string;
-  args: string[];
-  output: HTMLElement;
-}
 
 function termPrint(output: HTMLElement, html: string, kind: 'out' | 'err' = 'out'): void {
   const line = document.createElement('div');
@@ -296,6 +289,14 @@ function initPopstate(): void {
     });
     const sectorEl = $<HTMLElement>('[data-rail-sector]');
     if (sectorEl) sectorEl.textContent = r.sector;
+
+    // Restore terminal status strip + prompt path so they match the URL.
+    const statusPath = $<HTMLElement>('[data-term-status-path]');
+    const statusSector = $<HTMLElement>('[data-term-status-sector]');
+    const promptPath = $<HTMLElement>('[data-term-path]');
+    if (statusPath)   statusPath.textContent   = r.pathname === '/' ? '/about' : r.pathname.replace(/\/$/, '');
+    if (statusSector) statusSector.textContent = r.sector + '/04';
+    if (promptPath)   promptPath.textContent   = r.pathname === '/' ? '~/about' : '~' + r.pathname.replace(/\/$/, '');
   });
 }
 
