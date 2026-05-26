@@ -15,8 +15,8 @@ const projects = await getCollection('portfolio');
   <section class="py-12">
     <div class="max-w-[1200px] mx-auto px-6">
       <div class="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(350px,1fr))] gap-6">
-        {projects.map((project) => (
-          <PortfolioCard project={project} />
+        {projects.map((project, i) => (
+          <PortfolioCard project={project} index={i + 1} />
         ))}
       </div>
     </div>
