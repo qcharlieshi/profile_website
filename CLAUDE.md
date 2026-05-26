@@ -45,7 +45,7 @@ src/
 │   ├── SectionDivider.astro  # Glyph strip + // LABEL + dither rule + RegMark (still used in resume content)
 │   ├── PortfolioCard.astro   # Portfolio listing card
 │   ├── BlogCard.astro        # Blog listing card
-│   ├── CornerFrame.astro     # Yellow corner brackets wrapping a slot
+│   ├── CornerFrame.astro     # Yellow corner brackets wrapping a slot; optional `targets={{tl,tr,bl,br}}` makes each corner a click-toggle button that hides the matching selector via `.cf-hidden`
 │   ├── MetaBar.astro         # Dashed-top metadata rail (date + build + CTA) — coords prop removed
 │   ├── FileIndex.astro       # (legacy primitive — kept for now, used inside SectionDivider)
 │   ├── RegMark.astro         # Blue + crosshair
@@ -107,11 +107,11 @@ npm run preview  # Serve built dist/ locally
 
 ## Deployment
 
-- **Platform:** Cloudflare Pages
-- **Build command:** `npm run build`
-- **Output directory:** `dist`
-- **No SSR adapter needed** — pure static output deployed as flat files on Cloudflare's CDN
-- **Auto-rebuild for new blog posts:** Set up Cloudflare Pages deploy hook + GitHub Actions cron (see `docs/superpowers/plans/2026-04-14-astro-cloudflare-migration.md` Task 12)
+- **Platform:** Cloudflare Workers (Static Assets). `wrangler.jsonc` declares `assets.directory = "./dist"`; no Worker code — pure static.
+- **CI:** `.github/workflows/deploy.yml` runs `npm ci && npm run build && wrangler deploy` on push to `master`. Required secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
+- **No SSR adapter needed** — pure static output, flat files served from Cloudflare's CDN.
+- **Local preview:** use `npm run preview` (Astro). Don't reach for `wrangler dev` unless replicating Workers asset routing specifically.
+- **Blog post freshness:** new Medium posts only appear after a rebuild. Currently this only happens on push to `master`; a scheduled rebuild (cron workflow) is not yet wired.
 
 ## Key Patterns
 
