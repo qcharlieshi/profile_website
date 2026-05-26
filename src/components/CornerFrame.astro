@@ -1,0 +1,35 @@
+---
+interface Props {
+  inset?: number;
+  color?: string;
+}
+
+const { inset = 18, color = 'var(--accent-yellow)' } = Astro.props;
+---
+
+<div class="cf" style={`--cf-i:${inset}px;--cf-c:${color};`}>
+  <span class="cf-tl"></span>
+  <span class="cf-tr"></span>
+  <span class="cf-bl"></span>
+  <span class="cf-br"></span>
+  <slot />
+</div>
+
+<style>
+  .cf { position: relative; }
+  .cf > span {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border: 1.5px solid var(--cf-c);
+    pointer-events: none;
+  }
+  .cf-tl { top: var(--cf-i); left: var(--cf-i); border-right: none; border-bottom: none; }
+  .cf-tr { top: var(--cf-i); right: var(--cf-i); border-left: none; border-bottom: none; }
+  .cf-bl { bottom: var(--cf-i); left: var(--cf-i); border-right: none; border-top: none; }
+  .cf-br { bottom: var(--cf-i); right: var(--cf-i); border-left: none; border-top: none; }
+
+  @media (max-width: 768px) {
+    .cf > span { width: 14px; height: 14px; }
+  }
+</style>

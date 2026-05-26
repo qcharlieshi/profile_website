@@ -1,0 +1,44 @@
+---
+interface Props {
+  date: string;
+  coords?: string;
+  build?: string;
+  cta?: string;
+  ctaHref?: string;
+}
+
+const { date, coords, build, cta, ctaHref = '#' } = Astro.props;
+---
+
+<div class="mb">
+  <span class="accent">↳ {date}</span>
+  {coords && <span>{coords}</span>}
+  {build && <span>BUILD {build}</span>}
+  {cta && (
+    <a class="cta" href={ctaHref}>{cta}</a>
+  )}
+</div>
+
+<style>
+  .mb {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+    flex-wrap: wrap;
+    border-top: 1px dashed var(--border);
+    padding-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .accent { color: var(--accent-yellow); }
+  .cta {
+    margin-left: auto;
+    color: var(--accent-yellow);
+    text-decoration: none;
+    transition: opacity 200ms ease;
+  }
+  .cta:hover { opacity: 0.7; }
+</style>

@@ -1,0 +1,27 @@
+---
+interface Props {
+  direction?: 'v' | 'h';
+  count?: number;
+  gap?: number;
+}
+
+const { direction = 'v', count = 7, gap = 10 } = Astro.props;
+const glyphs = ['×', '○', '⊞', '+', '✕'];
+const items = Array.from({ length: count }, (_, i) => glyphs[i % glyphs.length]);
+---
+
+<div class:list={['gs', `gs-${direction}`]} style={`gap:${gap}px;`}>
+  {items.map((g) => <span>{g}</span>)}
+</div>
+
+<style>
+  .gs {
+    display: inline-flex;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--text-secondary);
+  }
+  .gs-v { flex-direction: column; }
+  .gs-h { flex-direction: row; }
+</style>
