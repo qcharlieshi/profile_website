@@ -4,8 +4,7 @@
 // the horizontal mobile rail clicks.
 
 import { T, TH, altLang, LANGS, LANG_LABEL, type Lang } from '../lib/i18n';
-
-type PaneKey = 'about' | 'resume';
+import { PANE_META, type PaneKey } from '../lib/paneMeta';
 
 interface RouteEntry {
   pathname: string;
@@ -17,8 +16,8 @@ interface RouteEntry {
 const ROUTES: RouteEntry[] = [
   { pathname: '/',            paneKey: 'about',  sector: '01', label: 'ABOUT' },
   { pathname: '/resume/',     paneKey: 'resume', sector: '02', label: 'RESUME' },
-  { pathname: '/portfolio/',                     sector: '03', label: 'PORTFOLIO' },
-  { pathname: '/blog/',                          sector: '04', label: 'BLOG' },
+  { pathname: '/portfolio/', paneKey: 'portfolio', sector: '03', label: 'PORTFOLIO' },
+  { pathname: '/blog/',      paneKey: 'blog',      sector: '04', label: 'BLOG' },
 ];
 
 const HEX_DIGITS = '0123456789ABCDEF';
@@ -113,15 +112,18 @@ function swapPane(targetKey: PaneKey, targetSector: string, targetPath: string):
       a.classList.toggle('active', a.dataset.key === targetKey);
     });
 
-    // Update meta-bar CTA: swap the i18n key + re-apply for current lang.
+    // Update meta-bar CTA from the shared per-pane map, then re-apply lang.
     const cta = $<HTMLAnchorElement>('[data-cta-href]');
     if (cta) {
-      if (targetKey === 'about') {
-        cta.dataset.i18n = 'meta.enter';
-        cta.setAttribute('href', '#about');
+      const m = PANE_META[targetKey];
+      cta.dataset.i18n = m.i18n;
+      cta.setAttribute('href', m.href);
+      if (m.external) {
+        cta.setAttribute('target', '_blank');
+        cta.setAttribute('rel', 'noopener noreferrer');
       } else {
-        cta.dataset.i18n = 'meta.download';
-        cta.setAttribute('href', '/resume.pdf');
+        cta.removeAttribute('target');
+        cta.removeAttribute('rel');
       }
       applyLang(getLang());
     }
@@ -333,6 +335,26 @@ function initRail(): void {
   });
 }
 
+// ============ DETAIL LINKS (pane → full page) ============
+
+// Mini-cards inside a listing pane link to a [slug] detail page. Intercept
+// the click, play the full-viewport checkerboard, then hard-navigate.
+function initDetailLinks(): void {
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement | null)?.closest<HTMLAnchorElement>('a[data-detail-link]');
+    if (!a) return;
+    const href = a.getAttribute('href');
+    if (!href) return;
+    e.preventDefault();
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      location.href = href;
+      return;
+    }
+    fireTransition('global');
+    setTimeout(() => { location.href = href; }, 300);
+  });
+}
+
 // ============ POPSTATE ============
 
 function initPopstate(): void {
@@ -492,5 +514,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initI18n();
   initTerminal();
   initRail();
+  initDetailLinks();
   initPopstate();
 });
