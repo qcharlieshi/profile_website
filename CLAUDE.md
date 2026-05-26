@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Personal portfolio website built as a pure static site with Astro and Tailwind CSS, deployed on Cloudflare Pages. Three sections: Home (hero + about), Portfolio (project listings + detail pages), Blog (Medium-powered).
 
-**Design language:** "Graphic retro futurism" inspired by Marathon (Bungie) — dark mode only, geometric all-caps typography, scan lines, noise grain, dot grid, glitch hover effects, registration mark motifs. All effects are CSS-only — zero JavaScript shipped to the browser.
+**Design language:** "Antireal" — direct lineage from the artist who inspired Bungie's Marathon. Dark mode only, monospace metadata, blocky geometric typography. Yellow (`#ffd23f`) is the only primary accent; electric blue (`#1860ff`) is reserved for registration marks and hairline rules. Motifs: yellow corner brackets, dashed metadata rails, big yellow file-index numbers, vertical glyph strips (`× ○ ⊞ + ✕`), dashed enclosures, bracketed callout tags. All effects CSS-only — zero JavaScript shipped to the browser.
 
 ## Architecture
 
@@ -54,22 +54,24 @@ public/
 └── favicon.ico
 ```
 
+**Motif components:** `CornerFrame`, `MetaBar`, `FileIndex`, `RegMark`, `GlyphStrip` in `src/components/`. These are the reusable antireal primitives; prefer them over ad-hoc absolute-positioned divs when adding new layouts. Build-time metadata for the meta bars comes from `src/lib/buildMeta.ts`.
+
 ### Styling: Tailwind CSS + Design System
 
 - `@astrojs/tailwind` integration
 - `@tailwindcss/typography` for `prose prose-invert` blog content
 - Design tokens in `tailwind.config.mjs`:
-  - Colors: `bg-primary` `#0a0a0a`, `bg-surface` `#141414`, `bg-elevated` `#1e1e1e`, `text-primary` `#e8e8e8`, `text-secondary` `#888888`, `accent-cyan` `#00f0ff`, `accent-magenta` `#ff2d6b`, `accent-yellow` `#ffd23f`, `border-default` `#2a2a2a`
+  - Colors: `bg-primary` `#0a0a0a`, `bg-surface` `#141416`, `bg-elevated` `#1c1c1f`, `text-primary` `#e8e8e8`, `text-secondary` `#8a8a90`, `accent-yellow` `#ffd23f` (primary accent), `accent-blue` `#1860ff` (reg marks + hairlines), `border-default` `#2a2a2e`. Raw CSS var name for the border is `--border` (Tailwind utility is `border-default` — same color, different naming context).
   - Fonts: `font-display` (Space Grotesk), `font-mono` (JetBrains Mono), `font-body` (Inter)
 - Utility classes in `src/styles/global.css`:
   - `.noise-overlay` — fixed SVG `feTurbulence` grain over entire page
-  - `.scan-lines` — horizontal CRT scan-line pattern (pseudo-element)
-  - `.dot-grid` — dot matrix background for cards
-  - `.reg-mark` — `+` crosshair pseudo-element in cyan
+  - `.scan-line-soft` — softened horizontal scan-line pattern (3px stride, 1.2% opacity)
+  - `.glyph-grid` — two-layer radial-gradient registration grid (white dots @ 18px, yellow dots @ 54px)
+  - `.dashed-enclosure` — 1px dashed border + padding, used for prose blocks
+  - `.callout-tag` — `[ LABEL ]` bracketed inline tag (yellow mono)
   - `.dither-divider` — repeating-linear-gradient horizontal divider
-  - `.section-label` — monospace `// LABEL` style
-  - `.glitch-hover` — CSS clip-path glitch animation on hover
-  - `.glow-pulse` — pulsing cyan box-shadow for featured items
+  - `.section-label` — monospace `// LABEL` style in yellow
+  - `.hairline-yellow`, `.hairline-blue` — 1px decorative rules in accent colors
 
 ### Blog: Medium RSS at Build Time
 
@@ -111,7 +113,7 @@ npm run preview  # Serve built dist/ locally
 - **Dark mode only:** No light mode toggle
 - **Monospace metadata:** Dates, tags, section labels, nav items use `font-mono` to feel like technical annotations
 - **All-caps display headings:** `text-transform: uppercase` enforced globally on h1-h6 in `global.css`
-- **Featured items:** `featured: true` in a portfolio entry's frontmatter adds `glow-pulse` animation and `md:col-span-2` in the grid
+- **Featured items:** `featured: true` in a portfolio entry's frontmatter adds `md:col-span-2` in the grid and renders a `[ FEATURED ]` callout-tag in the card's top-right corner
 - **Portfolio content:** Astro Content Collections. Schema in `src/content/config.ts`, one `.md` file per project in `src/content/portfolio/` (filename = slug). Load via `getCollection('portfolio')`; render bodies with `await entry.render()` + `<Content />`.
 
 ## Documentation
