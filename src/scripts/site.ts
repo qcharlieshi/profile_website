@@ -19,7 +19,7 @@ const ROUTES: RouteEntry[] = [
   { pathname: '/blog/',                          sector: '04', label: 'BLOG' },
 ];
 
-const GLYPHS = ['×', '○', '⊞', '+', '✕', '⊟', '◇'];
+const HEX_DIGITS = '0123456789ABCDEF';
 
 const $  = <T extends Element>(s: string, r: ParentNode = document) => r.querySelector<T>(s);
 const $$ = <T extends Element>(s: string, r: ParentNode = document) => Array.from(r.querySelectorAll<T>(s));
@@ -70,11 +70,10 @@ function glitchSector(toSector: string): void {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = toSector; return; }
   const iterations = 6;
   let i = 0;
+  const randHex = () => HEX_DIGITS[Math.floor(Math.random() * HEX_DIGITS.length)];
   const tick = () => {
     if (i++ < iterations) {
-      const a = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-      const b = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-      el.textContent = a + b;
+      el.textContent = randHex() + randHex();
     } else {
       el.textContent = toSector;
       return;
@@ -239,26 +238,34 @@ function runCommand(raw: string, output: HTMLElement): void {
 function initTerminal(): void {
   const input  = $<HTMLInputElement>('[data-term-input]');
   const output = $<HTMLElement>('[data-term-output]');
+  const mirror = $<HTMLElement>('[data-term-mirror]');
   if (!input || !output) return;
+
+  const syncMirror = () => { if (mirror) mirror.textContent = input.value; };
+
+  input.addEventListener('input', syncMirror);
 
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       runCommand(input.value, output);
       input.value = '';
+      syncMirror();
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (historyIdx > 0) { historyIdx--; input.value = HISTORY[historyIdx] ?? ''; }
+      syncMirror();
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
       if (historyIdx < HISTORY.length - 1) { historyIdx++; input.value = HISTORY[historyIdx] ?? ''; }
       else { historyIdx = HISTORY.length; input.value = ''; }
+      syncMirror();
     } else if (e.key === 'Tab') {
       e.preventDefault();
       const prefix = input.value.toLowerCase();
       const candidates = ['cd', 'ls', 'pwd', 'whoami', 'clear', 'help', 'about', 'resume', 'portfolio', 'blog', 'home']
         .filter(c => c.startsWith(prefix));
-      if (candidates.length === 1) input.value = candidates[0];
+      if (candidates.length === 1) { input.value = candidates[0]; syncMirror(); }
     } else if (e.key === 'Escape') {
       input.blur();
       termClear(output);
@@ -273,6 +280,26 @@ function initTerminal(): void {
     e.preventDefault();
     input.focus();
   });
+
+  // Any printable keypress on body (nothing else focused) routes to the prompt.
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key.length !== 1) return; // skip Shift, Tab, Arrow*, etc.
+    const active = document.activeElement as HTMLElement | null;
+    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+    input.focus();
+  });
+
+  // Click anywhere outside the terminal header blurs the prompt.
+  const header = $<HTMLElement>('[data-terminal]');
+  document.addEventListener('mousedown', (e) => {
+    if (!header) return;
+    if (header.contains(e.target as Node)) return;
+    if (document.activeElement === input) input.blur();
+  });
+
+  // Auto-focus on load so visitors can just start typing.
+  input.focus({ preventScroll: true });
 }
 
 // ============ RAIL CLICKS ============

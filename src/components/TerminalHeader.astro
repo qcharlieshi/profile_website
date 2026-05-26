@@ -24,15 +24,17 @@ const promptPath = pathname === '/' ? '~/about' : `~${pathname.replace(/\/$/, ''
     <span class="dim">:</span>
     <span class="path-label" data-term-path>{promptPath}</span>
     <span class="dim">$</span>
-    <input
-      class="prompt-input"
-      type="text"
-      autocomplete="off"
-      spellcheck="false"
-      data-term-input
-      aria-label="terminal command input"
-    />
-    <span class="cursor" aria-hidden="true"></span>
+    <span class="prompt-field">
+      <span class="prompt-mirror" data-term-mirror aria-hidden="true"></span><span class="cursor" aria-hidden="true"></span>
+      <input
+        class="prompt-input"
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        data-term-input
+        aria-label="terminal command input"
+      />
+    </span>
     <span class="sp"></span>
     <span class="dim hint">↵ EXEC · ESC · TAB</span>
   </div>
@@ -73,15 +75,34 @@ const promptPath = pathname === '/' ? '~/about' : `~${pathname.replace(/\/$/, ''
 
   .path-label { color: var(--accent-yellow); }
 
-  .prompt-input {
+  .prompt-field {
+    position: relative;
     flex: 1;
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    height: 14px;
+    cursor: text;
+  }
+  .prompt-mirror {
+    white-space: pre;
+    color: var(--text-primary);
+    pointer-events: none;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .prompt-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
     background: transparent;
     border: none;
     outline: none;
-    color: var(--text-primary);
+    color: transparent;
     font: inherit;
     letter-spacing: inherit;
-    min-width: 0;
+    padding: 0;
+    margin: 0;
     caret-color: transparent;  /* we draw our own */
   }
   .cursor {
@@ -89,6 +110,8 @@ const promptPath = pathname === '/' ? '~/about' : `~${pathname.replace(/\/$/, ''
     width: 7px; height: 11px;
     background: var(--accent-yellow);
     animation: term-blink 1s steps(2) infinite;
+    flex: 0 0 auto;
+    margin-left: 1px;
   }
   @keyframes term-blink { 50% { opacity: 0; } }
 
