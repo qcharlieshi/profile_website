@@ -3,9 +3,47 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import AboutSection from '../components/AboutSection.astro';
 import SectionDivider from '../components/SectionDivider.astro';
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Charlie Shi',
+  url: 'https://www.charlieshi.com',
+  jobTitle: 'Full Stack & Machine Learning Engineer',
+  worksFor: {
+    '@type': 'Organization',
+    name: 'LILT',
+    url: 'https://lilt.com',
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'San Francisco',
+    addressRegion: 'CA',
+    addressCountry: 'US',
+  },
+  knowsAbout: [
+    'Large Language Models',
+    'Machine Translation',
+    'Agent Orchestration',
+    'Model Context Protocol',
+    'ML Infrastructure',
+    'Full Stack Development',
+    'Game Engines',
+  ],
+  sameAs: [
+    'https://github.com/qcharlieshi',
+    'https://www.linkedin.com/in/qcharlieshi/',
+    'https://www.reddit.com/user/CommodoreQuinli/',
+  ],
+};
 ---
 
 <Base title="Charlie Shi — Full Stack Engineer">
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(personSchema)}
+  />
   <Hero />
   <SectionDivider label="ABOUT" />
   <AboutSection />
