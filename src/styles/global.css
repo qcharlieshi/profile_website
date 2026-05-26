@@ -138,7 +138,7 @@
 .name-glitch > .name-en,
 .name-glitch > .name-zh {
   display: block;
-  color: #e8e8e8;
+  color: var(--text-primary);
 }
 
 .name-glitch > .name-zh {
@@ -202,19 +202,22 @@
   background-size: 8px 8px, 24px 24px;
   background-position: 0 0, 4px 4px;
   mix-blend-mode: screen;
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
   mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
 }
 
 .pane-transition .checker.layer-2 {
   background-position: 2px 2px, 8px 8px;
+  -webkit-mask-image: radial-gradient(ellipse at 30% 70%, black 20%, transparent 60%);
   mask-image: radial-gradient(ellipse at 30% 70%, black 20%, transparent 60%);
-  animation-delay: 80ms !important;
+  animation-delay: 80ms;
 }
 
 .pane-transition .checker.layer-3 {
   background-position: 6px 6px, 14px 14px;
+  -webkit-mask-image: radial-gradient(ellipse at 70% 30%, black 25%, transparent 65%);
   mask-image: radial-gradient(ellipse at 70% 30%, black 25%, transparent 65%);
-  animation-delay: 160ms !important;
+  animation-delay: 160ms;
 }
 
 body.transitioning .pane-transition,
@@ -222,7 +225,11 @@ body.transitioning .pane-transition,
 
 body.transitioning .pane-transition .checker,
 .pane-transition.firing .checker {
-  animation: marathon-ramp 600ms ease-in-out 1;
+  animation-name: marathon-ramp;
+  animation-duration: 600ms;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+  animation-delay: 0ms;
 }
 
 @keyframes marathon-ramp {
@@ -236,7 +243,7 @@ body.transitioning .pane-transition .checker,
 
 .sector-display {
   text-align: right;
-  border-bottom: 1px dashed var(--border);
+  border-bottom: var(--rule-thin) dashed var(--border);
   padding-bottom: 10px;
 }
 
