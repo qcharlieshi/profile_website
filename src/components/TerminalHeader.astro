@@ -1,0 +1,120 @@
+---
+import { getBuildMeta } from '../lib/buildMeta';
+
+const meta = getBuildMeta();
+const pathname = Astro.url.pathname;
+
+// Derive sector number from current path
+function sectorFor(p: string): { num: string; total: string } {
+  if (p === '/' || p.startsWith('/about')) return { num: '01', total: '04' };
+  if (p.startsWith('/resume')) return { num: '02', total: '04' };
+  if (p.startsWith('/portfolio')) return { num: '03', total: '04' };
+  if (p.startsWith('/blog')) return { num: '04', total: '04' };
+  return { num: '--', total: '04' };
+}
+
+const sector = sectorFor(pathname);
+const promptPath = pathname === '/' ? '~/about' : `~${pathname.replace(/\/$/, '')}`;
+---
+
+<header class="term-header" data-terminal>
+  <div class="row prompt-row">
+    <span class="reg" aria-hidden="true">+</span>
+    <span class="dim">charlie_shi.sys</span>
+    <span class="dim">:</span>
+    <span class="path-label" data-term-path>{promptPath}</span>
+    <span class="dim">$</span>
+    <input
+      class="prompt-input"
+      type="text"
+      autocomplete="off"
+      spellcheck="false"
+      data-term-input
+      aria-label="terminal command input"
+    />
+    <span class="cursor" aria-hidden="true"></span>
+    <span class="sp"></span>
+    <span class="dim hint">↵ EXEC · ESC · TAB</span>
+  </div>
+  <div class="row status-row">
+    <span class="pill on">CMD</span>
+    <span class="dim">PATH</span><span class="y" data-term-status-path>{pathname === '/' ? '/about' : pathname.replace(/\/$/, '')}</span>
+    <span class="dim">SECTOR</span><span class="y" data-term-status-sector>{sector.num}/{sector.total}</span>
+    <span class="dim">COMMIT</span><span class="b">{(meta as any).shortHash ?? (meta as any).hash}</span>
+    <span class="sp"></span>
+    <span class="dim">{(meta as any).buildDate ?? (meta as any).date}</span>
+  </div>
+  <div class="term-output" data-term-output aria-live="polite"></div>
+</header>
+
+<style>
+  .term-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    background: #050505;
+    border-bottom: 1px solid var(--accent-yellow);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+  .row { padding: 8px 22px; display: flex; gap: 14px; align-items: center; }
+  .prompt-row { border-bottom: 1px dashed var(--border); }
+  .status-row { padding: 5px 22px; font-size: 10px; gap: 22px; color: #6f6f74; }
+
+  .reg { color: var(--accent-blue); font-weight: 700; }
+  .y   { color: var(--accent-yellow); }
+  .b   { color: var(--accent-blue); font-weight: 700; }
+  .dim { color: var(--text-secondary); }
+  .sp  { flex: 1; }
+
+  .pill { padding: 1px 6px; background: var(--bg-elevated); border: 1px solid var(--border); }
+  .pill.on { background: var(--accent-yellow); color: #0a0a0a; border-color: var(--accent-yellow); }
+
+  .path-label { color: var(--accent-yellow); }
+
+  .prompt-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font: inherit;
+    letter-spacing: inherit;
+    min-width: 0;
+    caret-color: transparent;  /* we draw our own */
+  }
+  .cursor {
+    display: inline-block;
+    width: 7px; height: 11px;
+    background: var(--accent-yellow);
+    animation: term-blink 1s steps(2) infinite;
+  }
+  @keyframes term-blink { 50% { opacity: 0; } }
+
+  .hint { font-size: 9px; }
+
+  .term-output {
+    padding: 0 22px;
+    color: var(--text-secondary);
+    font-size: 10px;
+    line-height: 1.6;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 200ms ease;
+  }
+  .term-output.has-content {
+    max-height: 120px;
+    padding: 6px 22px 8px;
+    border-top: 1px dashed var(--border);
+  }
+  .term-output .err { color: #ff5a4a; }
+  .term-output .out { color: var(--text-primary); }
+  .term-output .out b { color: var(--accent-yellow); }
+
+  @media (max-width: 768px) {
+    .row { padding: 7px 14px; gap: 8px; }
+    .status-row { padding: 4px 14px; font-size: 9px; gap: 10px; flex-wrap: wrap; }
+    .hint { display: none; }
+  }
+</style>
