@@ -106,13 +106,18 @@ const active = items.find(i => i.key === activeKey)!;
     }
     .rail-item.active::before {
       content: attr(data-sector);
-      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 100%;
+      text-align: center;
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 800;
       font-size: 22px;
       color: var(--accent-yellow);
       letter-spacing: 0;
-      margin-bottom: 2px;
+      line-height: 1;
+      margin-bottom: 4px;
     }
     .rail-item .caret { display: none; }
   }

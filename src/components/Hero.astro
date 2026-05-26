@@ -266,8 +266,10 @@ const sector = initialPane === 'about' ? '01' : '02';
   @media (max-width: 768px) {
     .top-l, .top-r { top: 13px; height: 14px; font-size: 9px; letter-spacing: 0.18em; }
     .top-l { left: 24px; }
-    .top-r { right: 24px; }
+    .top-r { right: 40px; }
     .top-r .commit-sub { display: none; }
+    .top-r .commit-line span[data-i18n="hero.commit"] { display: none; }
+    .top-r .commit-line b { margin-right: 0; }
     .glyphs { display: none; }
     .pane-container {
       top: 90px; bottom: 240px; left: 40px; right: 40px;
