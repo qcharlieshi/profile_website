@@ -1,0 +1,104 @@
+---
+const stats = [
+  { k: 'Years',  v: '11',                 accent: true  },
+  { k: 'Stack',  v: 'TS · PY · JAVA',     accent: false },
+  { k: 'Focus',  v: 'AGENT · MCP',        accent: false },
+];
+
+const links = [
+  { href: 'https://github.com/qcharlieshi',          label: 'GITHUB ↗' },
+  { href: 'https://www.linkedin.com/in/qcharlieshi/', label: 'LINKEDIN ↗' },
+  { href: 'mailto:charlie.shi@lilt.com',              label: 'EMAIL ↗' },
+];
+---
+
+<div class="pane" data-pane-key="about">
+  <div class="pane-label">// ABOUT</div>
+
+  <p class="prose">
+    Building <code>Agent-MCP</code> orchestration and ML infrastructure at
+    <a href="https://lilt.com" target="_blank" rel="noopener">LILT</a>.
+    Boston native, currently in Andover, MA. Heavy bias toward shipping;
+    allergic to abstractions that don't pay for themselves. Background spans
+    fullstack ↗ ML infra ↗ agent platforms.
+  </p>
+
+  <div class="stat-row">
+    {stats.map((s) => (
+      <div class="stat">
+        <div class="stat-k">// {s.k}</div>
+        <div class:list={['stat-v', s.accent && 'blue']}>{s.v}</div>
+      </div>
+    ))}
+  </div>
+
+  <div class="tag-row">
+    {links.map((l) => (
+      <a class="tag" href={l.href} target="_blank" rel="noopener">[ {l.label} ]</a>
+    ))}
+  </div>
+</div>
+
+<style>
+  .pane {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: 100%;
+    overflow: hidden;
+  }
+  .pane-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--accent-yellow);
+  }
+  .prose {
+    color: #c8c8ce;
+    font-size: 14px;
+    line-height: 1.65;
+    margin: 0;
+  }
+  .prose a {
+    color: var(--accent-blue);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(24,96,255,0.55);
+  }
+  .prose code {
+    color: var(--accent-blue);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  .stat-row { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 4px; }
+  .stat { border-top: 1px solid var(--border); padding-top: 6px; min-width: 100px; }
+  .stat-k {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.18em;
+    color: var(--text-secondary);
+  }
+  .stat-v {
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--accent-yellow);
+    font-size: 16px; margin-top: 4px;
+  }
+  .stat-v.blue { color: var(--accent-blue); }
+
+  .tag-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.18em;
+    color: var(--accent-yellow);
+    padding: 3px 10px;
+    border: 1px solid var(--accent-yellow);
+    text-decoration: none;
+    transition: background 200ms;
+  }
+  .tag:hover { background: rgba(255,210,63,0.08); }
+
+  @media (max-width: 768px) {
+    .prose { font-size: 12px; }
+    .stat { min-width: 80px; }
+    .tag { font-size: 9px; padding: 2px 6px; }
+  }
+</style>
