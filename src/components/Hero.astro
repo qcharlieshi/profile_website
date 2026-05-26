@@ -1,26 +1,130 @@
 ---
+import CornerFrame from './CornerFrame.astro';
+import MetaBar from './MetaBar.astro';
+import FileIndex from './FileIndex.astro';
+import GlyphStrip from './GlyphStrip.astro';
+import { getBuildMeta } from '../lib/buildMeta';
+
+const meta = getBuildMeta();
 ---
 
-<section class="relative h-screen flex items-center justify-center overflow-hidden scan-lines" style="perspective: 1px;">
-  <div
-    class="absolute inset-0 -z-10"
-    style="transform: translateZ(-1px) scale(2); background: radial-gradient(ellipse at 30% 50%, rgba(0, 240, 255, 0.05), transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(255, 45, 107, 0.03), transparent 60%);"
-  ></div>
+<section class="hero scan-line-soft glyph-grid">
+  <CornerFrame inset={18}>
+    <div class="hero-inner">
+      <div class="top-l">// PORTFOLIO.SYS — REV 2026.05</div>
+      <div class="top-r">SECTOR 01/03</div>
 
-  <div class="relative z-10 max-w-[1200px] mx-auto px-6 text-center">
-    <h1 class="font-display font-extrabold tracking-[0.12em] leading-tight" style="font-size: clamp(2.5rem, 5vw, 5rem);">
-      <span class="name-flicker">
-        <span class="name-en">CHARLIE SHI</span>
-        <span class="name-zh" lang="zh">石千里</span>
-      </span>
-    </h1>
-    <p class="font-mono text-sm text-text-secondary tracking-[0.2em] mt-4 uppercase">
-      Full Stack Engineer
-    </p>
-    <div class="flex justify-center gap-3 mt-6">
-      <span class="reg-mark"></span>
-      <div class="w-16 h-px bg-accent-cyan opacity-40"></div>
-      <span class="reg-mark"></span>
+      <div class="file-anchor">
+        <FileIndex index="01" label="FILE INDEX" size="lg" />
+      </div>
+
+      <div class="glyphs">
+        <GlyphStrip direction="v" count={7} gap={14} />
+      </div>
+
+      <div class="name-block">
+        <div class="kicker">— STAFF AI ENGINEER · LILT AI</div>
+        <h1 class="name">
+          <span class="name-flicker h2">
+            <span class="name-en">CHARLIE<br />SHI</span>
+            <span class="name-zh" lang="zh">石千里</span>
+          </span>
+        </h1>
+      </div>
+
+      <div class="meta-anchor">
+        <MetaBar
+          date={meta.date}
+          coords={meta.coords}
+          build={meta.hash}
+          cta="↗ ENTER"
+          ctaHref="#about"
+        />
+      </div>
     </div>
-  </div>
+  </CornerFrame>
 </section>
+
+<style>
+  .hero {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .hero-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .top-l, .top-r {
+    position: absolute;
+    top: 30px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent-yellow);
+  }
+  .top-l { left: 60px; }
+  .top-r { right: 60px; }
+
+  .file-anchor {
+    position: absolute;
+    top: 90px;
+    right: 60px;
+  }
+  .glyphs {
+    position: absolute;
+    top: 90px;
+    left: 30px;
+    height: 60%;
+    display: flex;
+    align-items: stretch;
+  }
+  .glyphs :global(.gs) {
+    height: 100%;
+    justify-content: space-between;
+  }
+
+  .name-block {
+    position: absolute;
+    left: 60px;
+    bottom: 70px;
+    max-width: 60%;
+  }
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+  }
+  .name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    font-size: clamp(48px, 9vw, 92px);
+    line-height: 0.9;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .meta-anchor {
+    position: absolute;
+    bottom: 30px;
+    left: 60px;
+    right: 60px;
+  }
+
+  @media (max-width: 768px) {
+    .top-l, .top-r { top: 18px; font-size: 9px; letter-spacing: 0.18em; }
+    .top-l { left: 24px; }
+    .top-r { right: 24px; }
+    .file-anchor { top: 60px; right: 24px; }
+    .glyphs { display: none; }
+    .name-block { left: 24px; bottom: 60px; max-width: 80%; }
+    .meta-anchor { bottom: 18px; left: 24px; right: 24px; }
+  }
+</style>
