@@ -10,3 +10,4 @@ dist/
 
 # Stale Next.js build cache (pre-migration)
 .next/
+.superpowers/
