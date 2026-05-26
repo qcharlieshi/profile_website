@@ -54,11 +54,18 @@ const { title, description = 'Charlie Shi — Staff AI Engineer', ogImage } = As
 <style is:global>
   @import '../styles/global.css';
 
-  .page-body {
-    padding-top: 64px; /* clear the fixed TerminalHeader */
+  html, body {
+    height: 100%;
   }
-
-  @media (max-width: 768px) {
-    .page-body { padding-top: 70px; }
+  body {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .page-body {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 </style>

@@ -10,7 +10,7 @@ export default {
         'text-primary': '#e8e8e8',
         'text-secondary': '#8a8a90',
         'accent-yellow': '#ffd23f',
-        'accent-blue': '#1860ff',
+        'accent-blue': '#4d8eff',
         'border-default': '#2a2a2e',
       },
       fontFamily: {

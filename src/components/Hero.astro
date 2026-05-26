@@ -24,8 +24,8 @@ const sector = initialPane === 'about' ? '01' : '02';
       <div class="top-r">
         <div class="commit-line">
           <b>{meta.shortHash}</b>LATEST COMMIT
+          {meta.subject && <span class="commit-sub" title={meta.subject}>"{meta.subject}"</span>}
         </div>
-        {meta.subject && <div class="commit-sub" title={meta.subject}>"{meta.subject}"</div>}
       </div>
 
       <div class="glyphs">
@@ -55,12 +55,15 @@ const sector = initialPane === 'about' ? '01' : '02';
       </div>
 
       <div class="meta-bar">
-        <span class="meta-date">↳ {meta.buildDate}</span>
+        <span class="meta-coords">↳ BOSTON, MA</span>
         <span class="meta-sep">·</span>
-        <span class="meta-hash">{meta.shortHash}</span>
-        {meta.subject && (
-          <span class="meta-sub" title={meta.subject}>"{meta.subject}"</span>
-        )}
+        <a
+          class="meta-coords-val"
+          href="https://www.google.com/maps/search/?api=1&query=42.3601%2C-71.0589"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open Boston, MA in Google Maps"
+        >N 42°21′ W 71°03′</a>
         <span class="sp"></span>
         <a class="meta-cta" href={initialPane === 'about' ? '#about' : '/resume.pdf'} data-cta-href>
           {initialPane === 'about' ? '↗ ENTER' : '↗ DOWNLOAD PDF'}
@@ -73,7 +76,8 @@ const sector = initialPane === 'about' ? '01' : '02';
 <style>
   .hero {
     position: relative;
-    height: 100vh;
+    height: 100%;
+    min-height: 0;
     overflow: hidden;
   }
   .hero :global(.cf) {
@@ -89,7 +93,10 @@ const sector = initialPane === 'about' ? '01' : '02';
 
   .top-l, .top-r {
     position: absolute;
-    top: 30px;
+    top: 18px;
+    height: 22px;
+    display: flex;
+    align-items: center;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     letter-spacing: 0.25em;
@@ -97,13 +104,25 @@ const sector = initialPane === 'about' ? '01' : '02';
   }
   .top-l { left: 60px; color: var(--accent-yellow); }
   .top-r { right: 60px; text-align: right; }
-  .top-r .commit-line { font-size: 10px; letter-spacing: 0.12em; color: var(--text-secondary); }
+  .top-r .commit-line {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    white-space: nowrap;
+  }
   .top-r .commit-line b { color: var(--accent-blue); font-weight: 700; margin-right: 6px; }
   .top-r .commit-sub {
-    font-size: 9px; color: #6a6a6e; letter-spacing: 0.1em;
-    margin-top: 3px;
+    font-size: 9px;
+    color: #6a6a6e;
+    letter-spacing: 0.1em;
     max-width: 280px;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-transform: none;
   }
 
   .glyphs {
@@ -179,29 +198,36 @@ const sector = initialPane === 'about' ? '01' : '02';
 
   .meta-bar {
     position: absolute;
-    bottom: 30px;
+    bottom: 18px;
+    height: 22px;
     left: 60px; right: 60px;
-    border-top: 1px dashed var(--border);
-    padding-top: 10px;
     display: flex;
     gap: 18px;
-    align-items: baseline;
+    align-items: center;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10.5px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--text-secondary);
   }
-  .meta-bar .meta-date { color: var(--accent-yellow); }
-  .meta-bar .meta-sep { color: var(--text-secondary); }
-  .meta-bar .meta-hash { color: var(--accent-blue); font-weight: 700; }
-  .meta-bar .meta-sub {
-    color: #6a6a6e;
-    max-width: 320px;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    text-transform: none;
-    letter-spacing: 0.05em;
+  .meta-bar::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 100%;
+    margin-bottom: 8px;
+    border-top: 1px dashed var(--border);
   }
+  .meta-bar .meta-coords { color: var(--accent-yellow); }
+  .meta-bar .meta-sep { color: var(--text-secondary); }
+  .meta-bar .meta-coords-val {
+    color: var(--accent-blue);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-decoration: none;
+    transition: opacity 200ms;
+  }
+  .meta-bar .meta-coords-val:hover { opacity: 0.7; text-decoration: underline; text-underline-offset: 3px; }
   .meta-bar .sp { flex: 1; }
   .meta-bar .meta-cta {
     color: var(--accent-yellow);
@@ -211,7 +237,7 @@ const sector = initialPane === 'about' ? '01' : '02';
   .meta-bar .meta-cta:hover { opacity: 0.7; }
 
   @media (max-width: 768px) {
-    .top-l, .top-r { top: 18px; font-size: 9px; letter-spacing: 0.18em; }
+    .top-l, .top-r { top: 13px; height: 14px; font-size: 9px; letter-spacing: 0.18em; }
     .top-l { left: 24px; }
     .top-r { right: 24px; }
     .top-r .commit-sub { display: none; }
@@ -225,7 +251,7 @@ const sector = initialPane === 'about' ? '01' : '02';
     .name { font-size: 38px; white-space: nowrap; }
     .name .name-zh { font-size: 38px; }
     .kicker { font-size: 9px; margin-bottom: 8px; }
-    .meta-bar { bottom: 16px; left: 24px; right: 24px; }
-    .meta-bar .meta-sub { display: none; }
+    .meta-bar { bottom: 13px; height: 14px; left: 24px; right: 24px; }
+    .meta-bar::before { margin-bottom: 6px; }
   }
 </style>

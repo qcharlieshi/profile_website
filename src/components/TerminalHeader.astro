@@ -49,9 +49,9 @@ const promptPath = pathname === '/' ? '~/about' : `~${pathname.replace(/\/$/, ''
 
 <style>
   .term-header {
-    position: fixed;
-    top: 0; left: 0; right: 0;
+    position: relative;
     z-index: 50;
+    flex-shrink: 0;
     background: #050505;
     border-bottom: 1px solid var(--accent-yellow);
     font-family: 'JetBrains Mono', ui-monospace, monospace;
@@ -95,6 +95,11 @@ const promptPath = pathname === '/' ? '~/about' : `~${pathname.replace(/\/$/, ''
   .hint { font-size: 9px; }
 
   .term-output {
+    position: absolute;
+    top: 100%;
+    left: 0; right: 0;
+    background: #050505;
+    border-bottom: 1px solid var(--border);
     padding: 0 22px;
     color: var(--text-secondary);
     font-size: 10px;
