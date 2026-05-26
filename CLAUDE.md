@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Personal portfolio website built as a pure static site with Astro and Tailwind CSS, deployed on Cloudflare Pages. Three sections: Home (hero + about), Portfolio (project listings + detail pages), Blog (Medium-powered).
 
-**Design language:** "Antireal v2" — terminal-led navigation, hero-as-manifest. Dark mode only, monospace metadata, blocky geometric typography. Yellow (`#ffd23f`) is the primary UI accent; electric blue (`#1860ff`) is a secondary accent for content highlights (inline links, code spans, key dates/numbers). Sticky **mock terminal header** replaces the navbar — real interactive prompt with commands `cd / ls / pwd / whoami / clear / help`. The home (`/`) and resume (`/resume/`) routes render the same hero with different default panes; in-app swap uses `history.pushState` + a Marathon-style red-checkerboard transition. A **right rail** holds the active sector number (big yellow) above a 4-item label list (ABOUT / RESUME / PORTFOLIO / BLOG). Motifs: yellow corner brackets, dashed metadata rails, dense vertical glyph strips (`× ○ ⊞ + ✕ ⊟ ◇`), bracketed callout tags, glitchy EN↔ZH name flicker (chromatic split, clipped bands), real git commit info in the hero chrome. One small inline JS island (~250 LOC) handles terminal + transitions; everything else is CSS-only.
+**Design language:** "Antireal v2" — terminal-led navigation, hero-as-manifest. Dark mode only, monospace metadata, blocky geometric typography. Yellow (`#ffd23f`) is the primary UI accent; electric blue (`#1860ff`) is a secondary accent for content highlights (inline links, code spans, key dates/numbers). Sticky **mock terminal header** replaces the navbar — real interactive prompt with commands `cd / ls / pwd / whoami / clear / help`. All four routes (`/`, `/resume/`, `/portfolio/`, `/blog/`) render the same hero with different default panes; in-app swap between any of the four uses `history.pushState` + a Marathon-style red-checkerboard transition. Portfolio and Blog render their listings as stacked mini-cards inside the pane; clicking a card plays the full-viewport transition and navigates to the `[slug]` detail page. A **right rail** holds the active sector number (big yellow) above a 4-item label list (ABOUT / RESUME / PORTFOLIO / BLOG). Motifs: yellow corner brackets, dashed metadata rails, dense vertical glyph strips (`× ○ ⊞ + ✕ ⊟ ◇`), bracketed callout tags, glitchy EN↔ZH name flicker (chromatic split, clipped bands), real git commit info in the hero chrome. One small inline JS island (~250 LOC) handles terminal + transitions; everything else is CSS-only.
 
 ## Architecture
 
@@ -29,22 +29,22 @@ src/
 │   ├── resume/
 │   │   └── index.astro       # Resume: <Hero initialPane="resume" />
 │   ├── portfolio/
-│   │   ├── index.astro       # Portfolio listing
+│   │   ├── index.astro       # <Hero initialPane="portfolio" />
 │   │   └── [slug].astro      # Portfolio detail (getStaticPaths)
 │   └── blog/
-│       ├── index.astro       # Blog listing (Medium RSS)
+│       ├── index.astro       # <Hero initialPane="blog" />
 │       └── [slug].astro      # Blog post detail (getStaticPaths)
 ├── components/
 │   ├── TerminalHeader.astro  # Fixed terminal-style top bar with prompt input + status row + output drawer
-│   ├── Hero.astro            # Full-viewport hero hosting active pane (about|resume), name bottom-left, right rail, top-right commit
+│   ├── Hero.astro            # Full-viewport hero hosting active pane (about|resume|portfolio|blog), name bottom-left, right rail, top-right commit
 │   ├── RightRail.astro       # Sector number + 4-label nav list (about/resume/portfolio/blog)
 │   ├── PaneTransition.astro  # Three-layer red checkerboard overlay (.global variant for full-viewport)
 │   ├── panes/
-│   │   ├── AboutPane.astro   # About content: prose + 3 stats + 3 link tiles
-│   │   └── ResumePane.astro  # Resume content: experience / stack / education in code-listing format
+│   │   ├── AboutPane.astro       # About content: prose + 3 stats + 3 link tiles
+│   │   ├── ResumePane.astro      # Resume content: experience / stack / education in code-listing format
+│   │   ├── PortfolioPane.astro   # Portfolio listing: stacked mini-cards (getCollection)
+│   │   └── BlogPane.astro        # Blog listing: stacked mini-cards (getMediumPosts)
 │   ├── SectionDivider.astro  # Glyph strip + // LABEL + dither rule + RegMark (still used in resume content)
-│   ├── PortfolioCard.astro   # Portfolio listing card
-│   ├── BlogCard.astro        # Blog listing card
 │   ├── CornerFrame.astro     # Yellow corner brackets wrapping a slot; optional `targets={{tl,tr,bl,br}}` makes each corner a click-toggle button that hides the matching selector via `.cf-hidden`
 │   ├── MetaBar.astro         # Dashed-top metadata rail (date + build + CTA) — coords prop removed
 │   ├── FileIndex.astro       # (legacy primitive — kept for now, used inside SectionDivider)
@@ -54,10 +54,11 @@ src/
 │   ├── config.ts             # Collections schema (Zod)
 │   └── portfolio/            # One .md file per project
 ├── lib/
-│   ├── medium.ts             # Fetch + parse Medium RSS at build time
-│   └── buildMeta.ts          # Real git data (shortHash, subject, date, branch) snapshot
+│   ├── medium.ts             # Fetch + parse Medium RSS at build time (memoized)
+│   ├── buildMeta.ts          # Real git data (shortHash, subject, date, branch) snapshot
+│   └── paneMeta.ts           # PaneKey + per-pane meta-bar CTA map (shared by Hero + site.ts)
 ├── scripts/
-│   └── site.ts               # Vanilla TS: terminal commands, pane swap, transitions, sector glyph-overtake
+│   └── site.ts               # Vanilla TS: terminal commands, 4-pane swap, transitions, sector glyph-overtake, detail-link click-through
 ├── types/
 │   └── index.ts              # MediumPost interface
 ├── styles/
