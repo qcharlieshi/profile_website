@@ -1,0 +1,112 @@
+---
+const experience = [
+  { ln: '01', role: 'STAFF AI ENGINEER',       org: 'LILT',            yr: '2023 →' },
+  { ln: '02', role: 'SR FULLSTACK ENG',        org: 'OWN UP',          yr: '2018–22' },
+  { ln: '03', role: 'SOFTWARE ENG · UI/UX',    org: 'BOSTON CAPITAL',  yr: '2017–18' },
+  { ln: '04', role: 'PM · CONSULTANT',         org: 'WLH CONSULTING',  yr: '2014–16' },
+];
+
+const stack = ['TypeScript', 'Python', 'Java', 'Go', 'Rust', 'C', 'React', 'Node', 'Spring', 'K8s', 'LLMs', 'MCP', 'RAG', 'Redis', 'GCP', 'AWS'];
+const stackHighlighted = new Set(['TypeScript', 'Python', 'Java']);
+
+const education = [
+  { ln: '01', role: 'BBA · FIN + ORG MGMT', org: 'EMORY UNIVERSITY', yr: '2013' },
+];
+---
+
+<div class="pane" data-pane-key="resume">
+  <div class="pane-label">// RESUME · 11Y · SCROLL ↓</div>
+
+  <div class="doc-section">
+    <h4>// EXPERIENCE</h4>
+    {experience.map((e) => (
+      <div class="doc-line">
+        <span class="ln">{e.ln}</span>
+        <span class="role">{e.role}</span>
+        <span class="sp"></span>
+        <span class="org">{e.org}</span>
+        <span class="yr">{e.yr}</span>
+      </div>
+    ))}
+  </div>
+
+  <div class="doc-section">
+    <h4>// STACK</h4>
+    <div class="stack-line">
+      {stack.map((s, i) => (
+        <>{i > 0 && ' · '}{stackHighlighted.has(s) ? <b>{s}</b> : <span>{s}</span>}</>
+      ))}
+    </div>
+  </div>
+
+  <div class="doc-section">
+    <h4>// EDUCATION</h4>
+    {education.map((e) => (
+      <div class="doc-line">
+        <span class="ln">{e.ln}</span>
+        <span class="role">{e.role}</span>
+        <span class="sp"></span>
+        <span class="org">{e.org}</span>
+        <span class="yr">{e.yr}</span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .pane {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+  .pane::-webkit-scrollbar { width: 6px; }
+  .pane::-webkit-scrollbar-track { background: transparent; }
+  .pane::-webkit-scrollbar-thumb { background: var(--accent-yellow); }
+
+  .pane-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--accent-yellow);
+    margin-bottom: 4px;
+  }
+
+  .doc-section {
+    border-left: 1px dashed var(--border);
+    padding-left: 16px;
+  }
+  .doc-section h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.22em;
+    color: var(--accent-yellow);
+    margin: 0 0 8px; font-weight: 500;
+  }
+
+  .doc-line {
+    display: flex;
+    gap: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 3px 0;
+  }
+  .doc-line .ln  { color: #4a4a4f; min-width: 28px; text-align: right; }
+  .doc-line .role{ color: var(--text-primary); }
+  .doc-line .org { color: var(--accent-yellow); }
+  .doc-line .yr  { color: var(--accent-blue); }
+  .doc-line .sp  { flex: 1; }
+
+  .stack-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; line-height: 1.8;
+    color: #c8c8ce;
+  }
+  .stack-line b { color: var(--accent-blue); font-weight: 500; }
+
+  @media (max-width: 768px) {
+    .doc-line { font-size: 10px; gap: 8px; flex-wrap: wrap; }
+    .stack-line { font-size: 10px; }
+  }
+</style>
