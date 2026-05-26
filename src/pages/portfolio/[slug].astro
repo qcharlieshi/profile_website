@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import CornerFrame from '../../components/CornerFrame.astro';
 import FileIndex from '../../components/FileIndex.astro';
 import MetaBar from '../../components/MetaBar.astro';
-import { getLegacyBuildMeta as getBuildMeta } from '../../lib/buildMeta';
+import { getBuildMeta } from '../../lib/buildMeta';
 
 export async function getStaticPaths() {
   const projects = await getCollection('portfolio');
@@ -64,9 +64,8 @@ const meta = getBuildMeta();
 
           <div class="page-meta">
             <MetaBar
-              date={meta.date}
-              coords={meta.coords}
-              build={meta.hash}
+              date={meta.buildDate}
+              build={meta.shortHash}
               cta="↗ BACK"
               ctaHref="/portfolio/"
             />

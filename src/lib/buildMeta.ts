@@ -35,11 +35,3 @@ export function getBuildMeta(): BuildMeta {
   return SNAPSHOT;
 }
 
-// Deprecated alias — remove in Task 11 once all MetaBar callers are updated.
-export function getLegacyBuildMeta() {
-  return {
-    date: SNAPSHOT.buildDate,
-    hash: SNAPSHOT.shortHash,
-    coords: 'N 42°39′ W 71°08′',
-  };
-}

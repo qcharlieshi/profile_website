@@ -1,7 +1,8 @@
 ---
-import Navbar from '../components/Navbar.astro';
+import TerminalHeader from '../components/TerminalHeader.astro';
+import PaneTransition from '../components/PaneTransition.astro';
 import MetaBar from '../components/MetaBar.astro';
-import { getLegacyBuildMeta as getBuildMeta } from '../lib/buildMeta';
+import { getBuildMeta } from '../lib/buildMeta';
 
 interface Props {
   title: string;
@@ -9,7 +10,7 @@ interface Props {
   ogImage?: string;
 }
 
-const { title, description = 'Charlie Shi — Full Stack Engineer', ogImage } = Astro.props;
+const { title, description = 'Charlie Shi — Staff AI Engineer', ogImage } = Astro.props;
 const meta = getBuildMeta();
 ---
 
@@ -39,24 +40,37 @@ const meta = getBuildMeta();
       </filter>
     </svg>
     <div class="noise-overlay" style="filter: url(#noise);"></div>
-    <Navbar />
-    <slot />
+
+    <TerminalHeader />
+    <PaneTransition global />
+
+    <main class="page-body">
+      <slot />
+    </main>
+
     <footer class="page-foot">
       <div class="page-foot-inner">
         <MetaBar
-          date={meta.date}
-          coords={meta.coords}
-          build={meta.hash}
+          date={meta.buildDate}
+          build={meta.shortHash}
           cta="↗ TOP"
           ctaHref="#top"
         />
       </div>
     </footer>
+
+    <script>
+      import '../scripts/site.ts';
+    </script>
   </body>
 </html>
 
 <style is:global>
   @import '../styles/global.css';
+
+  .page-body {
+    padding-top: 64px; /* clear the fixed TerminalHeader */
+  }
 
   .page-foot {
     border-top: 1px solid var(--border);
@@ -66,5 +80,9 @@ const meta = getBuildMeta();
     max-width: 1200px;
     margin: 0 auto;
     padding: 24px 24px 32px;
+  }
+
+  @media (max-width: 768px) {
+    .page-body { padding-top: 70px; }
   }
 </style>

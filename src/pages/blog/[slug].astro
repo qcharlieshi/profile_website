@@ -4,7 +4,7 @@ import CornerFrame from '../../components/CornerFrame.astro';
 import FileIndex from '../../components/FileIndex.astro';
 import MetaBar from '../../components/MetaBar.astro';
 import { getMediumPosts } from '../../lib/medium';
-import { getLegacyBuildMeta as getBuildMeta } from '../../lib/buildMeta';
+import { getBuildMeta } from '../../lib/buildMeta';
 
 export async function getStaticPaths() {
   const posts = await getMediumPosts();
@@ -52,9 +52,8 @@ const dateLabel = `${yy}.${mm}.${dd}`;
 
           <div class="page-meta">
             <MetaBar
-              date={meta.date}
-              coords={meta.coords}
-              build={meta.hash}
+              date={meta.buildDate}
+              build={meta.shortHash}
               cta="↗ BACK"
               ctaHref="/blog/"
             />
