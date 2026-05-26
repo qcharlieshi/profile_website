@@ -1,30 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
-import SectionDivider from '../../components/SectionDivider.astro';
-import BlogCard from '../../components/BlogCard.astro';
-import { getMediumPosts } from '../../lib/medium';
-
-const posts = await getMediumPosts();
+import Hero from '../../components/Hero.astro';
 ---
 
-<Base title="Blog — Charlie Shi">
-  <div class="pt-20">
-    <SectionDivider label="BLOG" i18nKey="sec.blog" />
-  </div>
-
-  <section class="py-12">
-    <div class="max-w-[1200px] mx-auto px-6">
-      {posts.length === 0 ? (
-        <p class="font-mono text-sm text-text-secondary tracking-widest text-center py-20" data-i18n="blog.empty">
-          // NO POSTS FOUND — CHECK MEDIUM FEED
-        </p>
-      ) : (
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((post, i) => (
-            <BlogCard post={post} index={i + 1} />
-          ))}
-        </div>
-      )}
-    </div>
-  </section>
+<Base title="Blog — Charlie Shi" description="Blog — Charlie Shi">
+  <Hero initialPane="blog" />
 </Base>

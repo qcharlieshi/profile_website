@@ -1,0 +1,129 @@
+---
+import { getCollection } from 'astro:content';
+
+const projects = await getCollection('portfolio');
+// Newest first by frontmatter date string.
+projects.sort((a, b) => (a.data.date < b.data.date ? 1 : -1));
+const count = String(projects.length).padStart(2, '0');
+---
+
+<div class="pane" data-pane-key="portfolio">
+  <div class="pane-label">
+    <span data-i18n="portfolio.label">// PORTFOLIO</span>
+    <span class="pane-count"> · {count} ENTRIES · SCROLL ↓</span>
+  </div>
+
+  <div class="card-col">
+    {projects.map((project, i) => {
+      const idx = String(i + 1).padStart(2, '0');
+      const tag = (project.data.tags?.[0] ?? 'PROJECT').toUpperCase();
+      return (
+        <a class="mini-card" href={`/portfolio/${project.slug}/`} data-detail-link>
+          <div class="mc-head">
+            <span class="mc-idx">{idx}</span>
+            <span class="mc-tag">{tag}</span>
+            {project.data.featured && <span class="mc-feat">[ FEATURED ]</span>}
+            <span class="mc-arrow">↗</span>
+          </div>
+          <h3 class="mc-title">{project.data.title}</h3>
+          <p class="mc-desc">{project.data.description}</p>
+          <div class="mc-foot">
+            <span class="mc-date">{project.data.date}</span>
+            {project.data.tags?.slice(0, 3).map((t) => <span class="mc-chip">{t.toUpperCase()}</span>)}
+          </div>
+        </a>
+      );
+    })}
+  </div>
+</div>
+
+<style>
+  .pane {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+  .pane::-webkit-scrollbar { width: 6px; }
+  .pane::-webkit-scrollbar-track { background: transparent; }
+  .pane::-webkit-scrollbar-thumb { background: var(--accent-yellow); }
+
+  .pane-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--accent-yellow);
+    flex-shrink: 0;
+  }
+  .pane-count { color: var(--text-secondary); }
+
+  .card-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mini-card {
+    display: block;
+    border: 1px solid var(--border);
+    background: var(--bg-surface);
+    padding: 12px 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 200ms ease;
+  }
+  .mini-card:hover { border-color: var(--accent-yellow); }
+
+  .mc-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+  }
+  .mc-idx { color: #4a4a4f; }
+  .mc-tag { color: var(--accent-yellow); }
+  .mc-feat { color: var(--accent-yellow); border: 1px solid var(--accent-yellow); padding: 0 6px; }
+  .mc-arrow { margin-left: auto; color: var(--accent-yellow); }
+
+  .mc-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-primary);
+    margin: 8px 0 0;
+  }
+  .mc-desc {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin: 6px 0 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .mc-foot {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-top: 10px;
+  }
+  .mc-date { color: var(--accent-blue); }
+
+  @media (max-width: 768px) {
+    .mc-title { font-size: 16px; }
+    .mc-desc { font-size: 12px; }
+  }
+</style>

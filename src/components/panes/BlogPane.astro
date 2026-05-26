@@ -1,0 +1,161 @@
+---
+import { getMediumPosts } from '../../lib/medium';
+
+const posts = await getMediumPosts();
+const count = String(posts.length).padStart(2, '0');
+
+function dateLabel(pubDate: string): string {
+  const d = new Date(pubDate);
+  const yy = String(d.getFullYear()).slice(-2);
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yy}.${mm}.${dd}`;
+}
+---
+
+<div class="pane" data-pane-key="blog">
+  <div class="pane-label">
+    <span data-i18n="blog.label">// BLOG</span>
+    <span class="pane-count"> · {count} ENTRIES · SCROLL ↓</span>
+  </div>
+
+  {posts.length === 0 ? (
+    <p class="empty" data-i18n="blog.empty">// NO POSTS FOUND — CHECK MEDIUM FEED</p>
+  ) : (
+    <div class="card-col">
+      {posts.map((post, i) => {
+        const idx = `B${String(i + 1).padStart(2, '0')}`;
+        const cat = (post.categories?.[0] ?? 'TRANSMISSION').toUpperCase();
+        return (
+          <a class="mini-card" href={`/blog/${post.slug}/`} data-detail-link>
+            <div class="mc-head">
+              <span class="mc-idx">{idx}</span>
+              <span class="mc-tag">{cat}</span>
+              <span class="mc-arrow">↗</span>
+            </div>
+            <div class="mc-row">
+              {post.thumbnail && <img class="mc-thumb" src={post.thumbnail} alt="" loading="lazy" />}
+              <div class="mc-main">
+                <h3 class="mc-title">{post.title}</h3>
+                <p class="mc-desc">{post.description}</p>
+              </div>
+            </div>
+            <div class="mc-foot">
+              <span class="mc-date">{dateLabel(post.pubDate)}</span>
+              {post.categories?.slice(0, 3).map((c) => <span class="mc-chip">{c.toUpperCase()}</span>)}
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  )}
+</div>
+
+<style>
+  .pane {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+  .pane::-webkit-scrollbar { width: 6px; }
+  .pane::-webkit-scrollbar-track { background: transparent; }
+  .pane::-webkit-scrollbar-thumb { background: var(--accent-yellow); }
+
+  .pane-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--accent-yellow);
+    flex-shrink: 0;
+  }
+  .pane-count { color: var(--text-secondary); }
+
+  .empty {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--text-secondary);
+  }
+
+  .card-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mini-card {
+    display: block;
+    border: 1px solid var(--border);
+    background: var(--bg-surface);
+    padding: 12px 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 200ms ease;
+  }
+  .mini-card:hover { border-color: var(--accent-yellow); }
+
+  .mc-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+  }
+  .mc-idx { color: #4a4a4f; }
+  .mc-tag { color: var(--accent-yellow); }
+  .mc-arrow { margin-left: auto; color: var(--accent-yellow); }
+
+  .mc-row { display: flex; gap: 12px; }
+  .mc-thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    flex-shrink: 0;
+    filter: grayscale(1) brightness(0.85);
+    margin-top: 8px;
+  }
+  .mc-main { min-width: 0; }
+
+  .mc-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-primary);
+    margin: 8px 0 0;
+  }
+  .mc-desc {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin: 6px 0 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .mc-foot {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-top: 10px;
+  }
+  .mc-date { color: var(--accent-blue); }
+
+  @media (max-width: 768px) {
+    .mc-title { font-size: 16px; }
+    .mc-desc { font-size: 12px; }
+    .mc-thumb { width: 44px; height: 44px; }
+  }
+</style>

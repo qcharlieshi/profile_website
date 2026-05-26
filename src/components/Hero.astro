@@ -5,15 +5,20 @@ import RightRail from './RightRail.astro';
 import PaneTransition from './PaneTransition.astro';
 import AboutPane from './panes/AboutPane.astro';
 import ResumePane from './panes/ResumePane.astro';
+import PortfolioPane from './panes/PortfolioPane.astro';
+import BlogPane from './panes/BlogPane.astro';
 import { getBuildMeta } from '../lib/buildMeta';
+import { PANE_META, type PaneKey } from '../lib/paneMeta';
 
 interface Props {
-  initialPane: 'about' | 'resume';
+  initialPane: PaneKey;
 }
 const { initialPane } = Astro.props;
 const meta = getBuildMeta();
 
-const sector = initialPane === 'about' ? '01' : '02';
+const SECTOR: Record<PaneKey, string> = { about: '01', resume: '02', portfolio: '03', blog: '04' };
+const sector = SECTOR[initialPane];
+const cta = PANE_META[initialPane];
 ---
 
 <section class="hero glyph-grid" data-hero data-initial-pane={initialPane}>
@@ -49,6 +54,12 @@ const sector = initialPane === 'about' ? '01' : '02';
           <div class="pane-slot" data-pane-slot="resume" data-active={initialPane === 'resume' ? 'true' : 'false'} aria-hidden={initialPane !== 'resume'}>
             <ResumePane />
           </div>
+          <div class="pane-slot" data-pane-slot="portfolio" data-active={initialPane === 'portfolio' ? 'true' : 'false'} aria-hidden={initialPane !== 'portfolio'}>
+            <PortfolioPane />
+          </div>
+          <div class="pane-slot" data-pane-slot="blog" data-active={initialPane === 'blog' ? 'true' : 'false'} aria-hidden={initialPane !== 'blog'}>
+            <BlogPane />
+          </div>
         </div>
       </div>
 
@@ -81,8 +92,14 @@ const sector = initialPane === 'about' ? '01' : '02';
           aria-label="Open Boston, MA in Google Maps"
         >N 42°21′ W 71°03′</a>
         <span class="sp"></span>
-        <a class="meta-cta" href={initialPane === 'about' ? '#about' : '/resume.pdf'} data-cta-href data-i18n={initialPane === 'about' ? 'meta.enter' : 'meta.download'}>
-          {initialPane === 'about' ? '↗ ENTER' : '↗ DOWNLOAD PDF'}
+        <a
+          class="meta-cta"
+          href={cta.href}
+          data-cta-href
+          data-i18n={cta.i18n}
+          {...(cta.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        >
+          {cta.label}
         </a>
       </div>
     </div>
