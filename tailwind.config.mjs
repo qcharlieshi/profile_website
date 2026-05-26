@@ -23,12 +23,12 @@ export default {
       typography: {
         invert: {
           css: {
-            '--tw-prose-links': '#00f0ff',
+            '--tw-prose-links': '#ffd23f',
             '--tw-prose-code': '#e8e8e8',
-            '--tw-prose-pre-bg': '#141414',
+            '--tw-prose-pre-bg': '#141416',
             '--tw-prose-pre-code': '#e8e8e8',
             '--tw-prose-quotes': '#e8e8e8',
-            '--tw-prose-quote-borders': '#00f0ff',
+            '--tw-prose-quote-borders': '#ffd23f',
           },
         },
       },

@@ -1,58 +1,124 @@
 ---
 import Base from '../../layouts/Base.astro';
-import SectionDivider from '../../components/SectionDivider.astro';
+import CornerFrame from '../../components/CornerFrame.astro';
+import FileIndex from '../../components/FileIndex.astro';
+import MetaBar from '../../components/MetaBar.astro';
 import { getMediumPosts } from '../../lib/medium';
+import { getBuildMeta } from '../../lib/buildMeta';
 
 export async function getStaticPaths() {
   const posts = await getMediumPosts();
-  return posts.map((post) => ({
+  return posts.map((post, i) => ({
     params: { slug: post.slug },
-    props: { post },
+    props: { post, index: i + 1 },
   }));
 }
 
-const { post } = Astro.props;
+const { post, index } = Astro.props;
+const paddedIndex = `B${String(index).padStart(3, '0')}`;
+const meta = getBuildMeta();
 
-const date = new Date(post.pubDate).toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
+const d = new Date(post.pubDate);
+const yy = String(d.getFullYear()).slice(-2);
+const mm = String(d.getMonth() + 1).padStart(2, '0');
+const dd = String(d.getDate()).padStart(2, '0');
+const dateLabel = `${yy}.${mm}.${dd}`;
 ---
 
 <Base title={`${post.title} — Charlie Shi`} description={post.description} ogImage={post.thumbnail}>
-  <div class="pt-20">
-    <SectionDivider label="BLOG POST" />
-  </div>
+  <article class="detail">
+    <CornerFrame inset={18}>
+      <div class="detail-inner">
+        <div class="top-l">// BLOG / {post.title.toUpperCase()}</div>
+        <div class="top-r"><FileIndex index={paddedIndex} label="TRANSMISSION" size="md" /></div>
 
-  <article class="py-12">
-    <div class="max-w-[800px] mx-auto px-6">
-      <a href="/blog/" class="font-mono text-xs text-accent-cyan tracking-widest uppercase hover:text-accent-yellow transition-colors glitch-hover">
-        &larr; Back to Blog
-      </a>
+        <div class="body-wrap">
+          <a href="/blog/" class="back">← BACK TO BLOG</a>
 
-      <h1 class="font-display font-extrabold tracking-[0.1em] mt-8 mb-4" style="font-size: clamp(1.5rem, 3vw, 2.5rem);">
-        {post.title}
-      </h1>
+          <h1 class="title">{post.title}</h1>
 
-      <div class="flex items-center gap-4 mb-2">
-        <span class="font-mono text-xs text-text-secondary tracking-widest">{date}</span>
-        <div class="flex gap-2">
-          {post.categories.map((cat) => (
-            <span class="font-mono text-[10px] text-accent-magenta tracking-widest uppercase">
-              {cat}
-            </span>
-          ))}
+          <div class="meta-line">
+            <span>{dateLabel}</span>
+            {post.categories.map((c) => <span class="tag">{c.toUpperCase()}</span>)}
+          </div>
+
+          <a class="callout-tag medium-link" href={post.link} target="_blank" rel="noopener">
+            ↗ READ ON MEDIUM
+          </a>
+
+          <div class="dashed-enclosure body">
+            <div class="prose prose-invert prose-lg max-w-none" set:html={post.content} />
+          </div>
+
+          <div class="page-meta">
+            <MetaBar
+              date={meta.date}
+              coords={meta.coords}
+              build={meta.hash}
+              cta="↗ BACK"
+              ctaHref="/blog/"
+            />
+          </div>
         </div>
       </div>
-
-      <a href={post.link} class="font-mono text-[10px] text-text-secondary tracking-widest hover:text-accent-cyan transition-colors" target="_blank" rel="noopener">
-        View on Medium &rarr;
-      </a>
-
-      <div class="dither-divider my-8"></div>
-
-      <div class="prose prose-invert prose-lg max-w-none" set:html={post.content} />
-    </div>
+    </CornerFrame>
   </article>
 </Base>
+
+<style>
+  .detail { padding-top: 96px; padding-bottom: 64px; }
+  .detail-inner { padding: 32px 48px 48px; position: relative; }
+  .top-l {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent-yellow);
+  }
+  .top-r {
+    position: absolute;
+    top: 32px;
+    right: 48px;
+  }
+  .body-wrap {
+    max-width: 800px;
+    margin: 56px auto 0;
+  }
+  .back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent-yellow);
+    text-decoration: none;
+  }
+  .title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: clamp(28px, 4vw, 44px);
+    margin: 32px 0 16px;
+  }
+  .meta-line {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .meta-line .tag { color: var(--accent-yellow); }
+  .medium-link {
+    display: inline-block;
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    text-decoration: none;
+    margin-bottom: 24px;
+  }
+  .body { margin-top: 8px; }
+  .page-meta { margin-top: 48px; }
+</style>
