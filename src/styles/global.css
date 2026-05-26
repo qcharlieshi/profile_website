@@ -274,6 +274,20 @@
 .lang-glitch > .lg-primary { animation: lang-glitch-primary 11s linear infinite; }
 .lang-glitch > .lg-alt     { animation: lang-glitch-alt     11s linear infinite; }
 
+/* Static variant: same DOM structure (so .lg-primary remains a consistent
+   alignment target), but no strobe — used to thin out the page-wide burst
+   density without removing the language overlay scaffolding. */
+.lang-glitch-still > .lg-primary,
+.lang-glitch-still > .lg-alt { animation: none !important; }
+.lang-glitch-still > .lg-primary { opacity: 1; }
+.lang-glitch-still > .lg-alt     { opacity: 0; }
+
+/* Right-rail alignment: push the last glyph past the visual right edge to
+   cancel the trailing letter-spacing + CJK glyph right-side bearing so the
+   rail labels visually line up with the rail's right edge (and with /04). */
+.rail-item > [data-i18n] > .lg-primary,
+.sector-display .sector-lbl > .lg-primary { margin-inline-end: -0.3em; }
+
 /* Three-act burst on an 11s cycle:
    0–43%    idle on primary
    43–45%   transition-out strobe (≈220ms)  → both spans flicker

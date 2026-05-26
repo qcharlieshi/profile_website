@@ -63,6 +63,9 @@ const active = items.find(i => i.key === activeKey)!;
     position: relative;
     transition: color 200ms ease;
   }
+  /* Alignment compensation for the dynamically-injected .lg-primary spans
+     lives in global.css — Astro's scoped styles can't reach JS-created
+     children without :global(). */
   .rail-item:hover { color: var(--accent-yellow); }
   .rail-item.active { color: var(--accent-yellow); }
   .rail-item .caret {

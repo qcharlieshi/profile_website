@@ -386,6 +386,25 @@ function lookupTH(key: string, lang: Lang): string | undefined {
   return TH[key]?.[lang] ?? TH[key]?.en;
 }
 
+// Deterministic 0..1 hash of the i18n key, used to decide which elements
+// glitch. Stable across reloads so the same elements always burst.
+function hash01(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return ((h >>> 0) % 10000) / 10000;
+}
+
+// Roughly this fraction of i18n elements get the strobe burst. The rest
+// language-switch silently — keeps the motif sparse instead of frenetic.
+const GLITCH_FRACTION = 0.35;
+
+function shouldGlitch(key: string): boolean {
+  return hash01(key) < GLITCH_FRACTION;
+}
+
 // Wrap an i18n element with .lang-glitch structure (idempotent).
 // `mode='text'` swaps textContent on the inner spans; `mode='html'` swaps
 // innerHTML and uses the block-layout variant so multi-line prose lines up.
@@ -432,10 +451,13 @@ function applyLang(lang: Lang): void {
       el.textContent = main;
       return;
     }
+    // Always wrap so .lg-primary is a consistent target for alignment.
+    // Non-glitching elements get .lang-glitch-still to disable the strobe.
     const parts = ensureGlitchStructure(el);
     parts.primary.textContent = main;
     parts.alt.textContent = altText ?? main;
     el.classList.toggle('alt-en', alt === 'en');
+    el.classList.toggle('lang-glitch-still', !shouldGlitch(key));
   });
 
   // Inline-HTML nodes: [data-i18n-html="key"] — same glitch hold/transition,
@@ -449,6 +471,7 @@ function applyLang(lang: Lang): void {
     parts.primary.innerHTML = main;
     parts.alt.innerHTML = altHtml ?? main;
     el.classList.toggle('alt-en', alt === 'en');
+    el.classList.toggle('lang-glitch-still', !shouldGlitch(key));
   });
 
   // Name flicker: when active is ZH, swap which span is primary.

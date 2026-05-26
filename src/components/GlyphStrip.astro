@@ -83,26 +83,29 @@ const items: Item[] = Array.from({ length: total }, () => {
   .gs-glitch .flick-b { animation-name: glyph-hold-b; }
   .gs-glitch .flick-n { animation-name: glyph-hold-n; }
 
-  /* Long hold in secondary, brief glitch transition, long hold in accent. */
+  /* Long hold in secondary, brief glitch transition, long hold in accent,
+     symmetric glitch transition back to secondary. */
   @keyframes glyph-hold-y {
     0%, 28% { color: var(--text-secondary); opacity: 0.7; text-shadow: none; transform: none; }
     29% { color: var(--accent-yellow); opacity: 1; text-shadow: 2px 0 var(--accent-blue), -1px 0 #ff3a2f; transform: translate(-1px, 0); }
     30% { color: var(--accent-yellow); opacity: 0.45; transform: translate(2px, 0); }
     31% { color: var(--accent-yellow); opacity: 1; text-shadow: 1px 0 var(--accent-blue); transform: none; }
-    32%, 96% { color: var(--accent-yellow); opacity: 1; text-shadow: none; transform: none; }
-    97% { color: var(--accent-yellow); opacity: 0.4; text-shadow: -2px 0 var(--accent-blue); transform: translate(1px, 0); }
-    98% { color: var(--text-secondary); opacity: 0.9; text-shadow: 1px 0 var(--accent-yellow); }
-    99%, 100% { color: var(--text-secondary); opacity: 0.7; text-shadow: none; transform: none; }
+    32%, 93% { color: var(--accent-yellow); opacity: 1; text-shadow: none; transform: none; }
+    94% { color: var(--accent-yellow); opacity: 1; text-shadow: -2px 0 var(--accent-blue), 1px 0 #ff3a2f; transform: translate(1px, 0); }
+    95% { color: var(--text-secondary); opacity: 0.45; text-shadow: 2px 0 var(--accent-yellow); transform: translate(-2px, 0); }
+    96% { color: var(--text-secondary); opacity: 0.9; text-shadow: 1px 0 var(--accent-yellow); transform: none; }
+    97%, 100% { color: var(--text-secondary); opacity: 0.7; text-shadow: none; transform: none; }
   }
   @keyframes glyph-hold-b {
     0%, 44% { color: var(--text-secondary); opacity: 0.7; text-shadow: none; transform: none; }
     45% { color: var(--accent-blue); opacity: 1; text-shadow: -2px 0 var(--accent-yellow), 1px 0 #ff3a2f; transform: translate(1px, 0); }
     46% { color: var(--accent-blue); opacity: 0.45; transform: translate(-2px, 0); }
     47% { color: var(--accent-blue); opacity: 1; text-shadow: -1px 0 var(--accent-yellow); transform: none; }
-    48%, 96% { color: var(--accent-blue); opacity: 1; text-shadow: none; transform: none; }
-    97% { color: var(--accent-blue); opacity: 0.4; text-shadow: 2px 0 var(--accent-yellow); transform: translate(-1px, 0); }
-    98% { color: var(--text-secondary); opacity: 0.9; text-shadow: -1px 0 var(--accent-blue); }
-    99%, 100% { color: var(--text-secondary); opacity: 0.7; text-shadow: none; transform: none; }
+    48%, 93% { color: var(--accent-blue); opacity: 1; text-shadow: none; transform: none; }
+    94% { color: var(--accent-blue); opacity: 1; text-shadow: 2px 0 var(--accent-yellow), -1px 0 #ff3a2f; transform: translate(-1px, 0); }
+    95% { color: var(--text-secondary); opacity: 0.45; text-shadow: -2px 0 var(--accent-blue); transform: translate(2px, 0); }
+    96% { color: var(--text-secondary); opacity: 0.9; text-shadow: -1px 0 var(--accent-blue); transform: none; }
+    97%, 100% { color: var(--text-secondary); opacity: 0.7; text-shadow: none; transform: none; }
   }
   @keyframes glyph-hold-n {
     0%, 100% { color: var(--text-secondary); opacity: 0.5; }
