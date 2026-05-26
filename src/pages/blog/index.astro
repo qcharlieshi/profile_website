@@ -9,13 +9,13 @@ const posts = await getMediumPosts();
 
 <Base title="Blog — Charlie Shi">
   <div class="pt-20">
-    <SectionDivider label="BLOG" />
+    <SectionDivider label="BLOG" i18nKey="sec.blog" />
   </div>
 
   <section class="py-12">
     <div class="max-w-[1200px] mx-auto px-6">
       {posts.length === 0 ? (
-        <p class="font-mono text-sm text-text-secondary tracking-widest text-center py-20">
+        <p class="font-mono text-sm text-text-secondary tracking-widest text-center py-20" data-i18n="blog.empty">
           // NO POSTS FOUND — CHECK MEDIUM FEED
         </p>
       ) : (

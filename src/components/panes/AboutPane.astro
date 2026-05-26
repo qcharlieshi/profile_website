@@ -1,31 +1,31 @@
 ---
 const stats = [
-  { k: 'Years',    v: '11',              accent: 'blue'   },
-  { k: 'Stack',    v: 'TS · PY · JAVA',  accent: 'yellow' },
-  { k: 'Focus',    v: 'AGENT · MCP',     accent: 'yellow' },
-  { k: 'Location', v: 'ANDOVER, MA',     accent: 'yellow' },
-  { k: 'Status',   v: 'BUILDING',        accent: 'blue'   },
+  { kKey: 'about.stat.years',    k: 'Years',    v: '11',             vKey: null,                       accent: 'blue'   },
+  { kKey: 'about.stat.stack',    k: 'Stack',    v: 'TS · PY · JAVA', vKey: null,                       accent: 'yellow' },
+  { kKey: 'about.stat.focus',    k: 'Focus',    v: 'AGENT · MCP',    vKey: 'about.stat.focus.v',       accent: 'yellow' },
+  { kKey: 'about.stat.location', k: 'Location', v: 'ANDOVER, MA',    vKey: 'about.stat.location.v',    accent: 'yellow' },
+  { kKey: 'about.stat.status',   k: 'Status',   v: 'BUILDING',       vKey: 'about.stat.status.v',      accent: 'blue'   },
 ];
 
 const now = [
-  'Agent-MCP orchestration @ LILT',
-  'ML infra · vLLM · eval harnesses',
-  'Personal · terminal-led site',
+  { key: 'about.now.1', text: 'Agent-MCP orchestration @ LILT' },
+  { key: 'about.now.2', text: 'ML infra · vLLM · eval harnesses' },
+  { key: 'about.now.3', text: 'Personal · terminal-led site' },
 ];
 
 const links = [
-  { href: 'https://github.com/qcharlieshi',           label: 'GITHUB ↗'   },
-  { href: 'https://www.linkedin.com/in/qcharlieshi/', label: 'LINKEDIN ↗' },
-  { href: 'mailto:charlie.shi@lilt.com',              label: 'EMAIL ↗'    },
+  { href: 'https://github.com/qcharlieshi',           label: 'GITHUB ↗',   i18n: 'about.link.github'   },
+  { href: 'https://www.linkedin.com/in/qcharlieshi/', label: 'LINKEDIN ↗', i18n: 'about.link.linkedin' },
+  { href: 'mailto:charlie.shi@lilt.com',              label: 'EMAIL ↗',    i18n: 'about.link.email'    },
 ];
 ---
 
 <div class="pane" data-pane-key="about">
-  <div class="pane-label">// ABOUT</div>
+  <div class="pane-label" data-i18n="about.label">// ABOUT</div>
 
   <div class="pane-body">
     <div class="col-main">
-      <p class="prose">
+      <p class="prose" data-i18n-html="about.prose">
         Building <code>Agent-MCP</code> orchestration and ML infrastructure at
         <a href="https://lilt.com" target="_blank" rel="noopener">LILT</a>.
         Boston native, currently in Andover, MA. Heavy bias toward shipping;
@@ -34,9 +34,9 @@ const links = [
       </p>
 
       <div class="sub-section">
-        <h4 class="section-h">// NOW</h4>
+        <h4 class="section-h" data-i18n="about.now">// NOW</h4>
         <ul class="bullet-list">
-          {now.map((n) => <li>{n}</li>)}
+          {now.map((n) => <li><span data-i18n={n.key}>{n.text}</span></li>)}
         </ul>
       </div>
     </div>
@@ -44,8 +44,10 @@ const links = [
     <div class="col-side">
       {stats.map((s) => (
         <div class="stat">
-          <div class="stat-k">// {s.k}</div>
-          <div class:list={['stat-v', s.accent]}>{s.v}</div>
+          <div class="stat-k">// <span data-i18n={s.kKey}>{s.k}</span></div>
+          {s.vKey
+            ? <div class:list={['stat-v', s.accent]}><span data-i18n={s.vKey}>{s.v}</span></div>
+            : <div class:list={['stat-v', s.accent]}>{s.v}</div>}
         </div>
       ))}
     </div>
@@ -53,7 +55,7 @@ const links = [
 
   <div class="pane-footer">
     {links.map((l) => (
-      <a class="tag" href={l.href} target="_blank" rel="noopener">[ {l.label} ]</a>
+      <a class="tag" href={l.href} target="_blank" rel="noopener">[ <span data-i18n={l.i18n}>{l.label}</span> ]</a>
     ))}
   </div>
 </div>
@@ -113,12 +115,13 @@ const links = [
     line-height: 1.65;
     margin: 0;
   }
-  .prose a {
+  /* `:global` so the runtime i18n innerHTML swap keeps the styling. */
+  .prose :global(a) {
     color: var(--accent-blue);
     text-decoration: none;
     border-bottom: 1px solid rgba(24,96,255,0.55);
   }
-  .prose code {
+  .prose :global(code) {
     color: var(--accent-blue);
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;

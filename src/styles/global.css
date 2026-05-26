@@ -152,6 +152,20 @@
 .name-glitch > .name-en { animation: glitch-en 7s steps(1, end) infinite; }
 .name-glitch > .name-zh { animation: glitch-zh 7s steps(1, end) infinite; }
 
+/* When the active language is Chinese, the ZH name is primary and the EN
+   name is the flicker. The .name-zh-primary modifier swaps which span gets
+   the absolute-positioned overlay treatment AND swaps the animations. */
+.name-glitch.name-zh-primary > .name-zh {
+  position: static;
+  animation-name: glitch-en;
+}
+.name-glitch.name-zh-primary > .name-en {
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation-name: glitch-zh;
+}
+
 /* The switch window (44%→47%) becomes a chaotic strobe — both layers
    ricochet between visible and invisible, with skewed clip bands and
    chromatic shadow flicker. Same again at 92%→95% on the way back. */
@@ -207,6 +221,99 @@
   93.8%       { opacity: 0;   }
   94.2%       { opacity: 0.1; clip-path: inset(0 0 85% 0); transform: translate(-1px, 0); }
   94.6%, 100% { opacity: 0; }
+}
+
+/* ============ GENERIC LANG GLITCH ============
+
+   Wraps a translated string in two layered spans: .lg-primary (active lang,
+   default visible) and .lg-alt (opposite lang, invisible). A short flicker
+   burst (~5% of an 11s cycle) strobes them and ends back on .lg-primary.
+   Each .lang-glitch element gets a random animation-delay via JS so the
+   bursts stagger across the page instead of all firing in sync.
+
+   Layout: the wrapper is inline-block; .lg-alt is absolutely positioned over
+   .lg-primary so they share the same baseline. Keep the wrapper inside
+   elements that already define their own typography. */
+
+.lang-glitch {
+  position: relative;
+}
+.lang-glitch > .lg-primary {
+  display: inline-block;
+}
+.lang-glitch > .lg-alt {
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: auto;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', inherit, system-ui, sans-serif;
+}
+.lang-glitch.alt-en > .lg-alt {
+  /* When alt is English, use the inherited Latin font instead of the SC stack. */
+  font-family: inherit;
+}
+
+/* `block` variant: used for multi-line content (prose paragraphs swapped via
+   data-i18n-html). Primary fills the parent's width; alt overlays full width
+   so wrapped lines line up over the primary. */
+.lang-glitch-block > .lg-primary {
+  display: block;
+}
+.lang-glitch-block > .lg-alt {
+  display: block;
+  left: 0;
+  right: 0;
+  top: 0;
+  white-space: normal;
+}
+
+.lang-glitch > .lg-primary { animation: lang-glitch-primary 11s linear infinite; }
+.lang-glitch > .lg-alt     { animation: lang-glitch-alt     11s linear infinite; }
+
+/* Three-act burst on an 11s cycle:
+   0–43%    idle on primary
+   43–45%   transition-out strobe (≈220ms)  → both spans flicker
+   45–55%   HOLD on alt for ≈1.1s            → alt fully visible
+   55–57%   transition-back strobe (≈220ms) → both spans flicker
+   57–100%  idle on primary
+*/
+@keyframes lang-glitch-primary {
+  0%, 42.9%    { opacity: 1; clip-path: inset(0); transform: translate(0,0); text-shadow: none; }
+  /* transition out */
+  43.0%        { opacity: 0.5; clip-path: inset(55% 0 15% 0); transform: translate(-2px,1px); text-shadow: 2px 0 var(--accent-yellow), -2px 0 var(--accent-blue); }
+  43.4%        { opacity: 0.1; clip-path: inset(10% 0 65% 0); transform: translate(2px,-1px); }
+  43.8%        { opacity: 0.6; clip-path: inset(35% 0 30% 0); transform: translate(-1px,0); text-shadow: -2px 0 var(--accent-blue), 2px 0 #ff3a2f; }
+  44.2%        { opacity: 0.2; clip-path: inset(0 0 70% 0); transform: translate(1px,1px); }
+  44.6%        { opacity: 0;   }
+  /* HOLD: alt is sole occupant */
+  45.0%, 54.9% { opacity: 0; clip-path: inset(0); transform: translate(0,0); text-shadow: none; }
+  /* transition back */
+  55.0%        { opacity: 0.2; clip-path: inset(0 0 70% 0); transform: translate(1px,0); text-shadow: 2px 0 var(--accent-yellow), -2px 0 var(--accent-blue); }
+  55.4%        { opacity: 0.7; clip-path: inset(45% 0 20% 0); transform: translate(-2px,1px); }
+  55.8%        { opacity: 0.3; clip-path: inset(20% 0 50% 0); transform: translate(2px,-1px); text-shadow: -2px 0 var(--accent-blue), 2px 0 var(--accent-yellow); }
+  56.2%        { opacity: 0.9; clip-path: inset(0); transform: translate(-1px,0); }
+  57.0%, 100%  { opacity: 1; clip-path: inset(0); transform: translate(0,0); text-shadow: none; }
+}
+@keyframes lang-glitch-alt {
+  0%, 42.9%    { opacity: 0; }
+  /* transition out (alt fading in through strobe) */
+  43.0%        { opacity: 0.2; clip-path: inset(40% 0 20% 0); transform: translate(2px,0); text-shadow: -2px 0 var(--accent-yellow), 2px 0 var(--accent-blue); }
+  43.4%        { opacity: 0.7; clip-path: inset(15% 0 55% 0); transform: translate(-2px,1px); }
+  43.8%        { opacity: 0.35;clip-path: inset(25% 0 35% 0); transform: translate(1px,-1px); text-shadow: 2px 0 #ff3a2f, -2px 0 var(--accent-blue); }
+  44.2%        { opacity: 0.85;clip-path: inset(0 0 60% 0); transform: translate(-1px,0); }
+  44.6%        { opacity: 0.6; clip-path: inset(0); transform: translate(0,0); }
+  /* HOLD: alt fully visible, no chromatic offset, sits steady */
+  45.0%, 54.9% { opacity: 1; clip-path: inset(0); transform: translate(0,0); text-shadow: none; }
+  /* transition back (alt fading out through strobe) */
+  55.0%        { opacity: 0.6; clip-path: inset(0 0 55% 0); transform: translate(-1px,0); text-shadow: 2px 0 #ff3a2f, -2px 0 var(--accent-blue); }
+  55.4%        { opacity: 0.2; clip-path: inset(35% 0 30% 0); transform: translate(2px,1px); }
+  55.8%        { opacity: 0.5; clip-path: inset(10% 0 60% 0); transform: translate(-2px,-1px); text-shadow: -2px 0 var(--accent-yellow), 2px 0 var(--accent-blue); }
+  56.2%        { opacity: 0.1; clip-path: inset(50% 0 20% 0); transform: translate(1px,0); }
+  57.0%, 100%  { opacity: 0; }
 }
 
 /* ============ MARATHON CHECKERBOARD TRANSITION ============ */
@@ -315,6 +422,13 @@ body.transitioning .pane-transition .checker,
   }
   .name-glitch > .name-en { opacity: 1; }
   .name-glitch > .name-zh { opacity: 0; }
+
+  .lang-glitch > .lg-primary,
+  .lang-glitch > .lg-alt {
+    animation: none !important;
+  }
+  .lang-glitch > .lg-primary { opacity: 1; }
+  .lang-glitch > .lg-alt     { opacity: 0; }
 
   .pane-transition,
   .pane-transition .checker {

@@ -27,11 +27,11 @@ const sector = initialPane === 'about' ? '01' : '02';
     }}
   >
     <div class="hero-inner">
-      <div class="top-l" data-cf-text="top-l">// PORTFOLIO.SYS — REV 2026.05</div>
+      <div class="top-l" data-cf-text="top-l" data-i18n="hero.sys">// PORTFOLIO.SYS — REV 2026.05</div>
 
       <div class="top-r" data-cf-text="top-r">
         <div class="commit-line">
-          <b>{meta.shortHash}</b>LATEST COMMIT
+          <b>{meta.shortHash}</b><span data-i18n="hero.commit">LATEST COMMIT</span>
           {meta.subject && <span class="commit-sub" title={meta.subject}>"{meta.subject}"</span>}
         </div>
       </div>
@@ -55,7 +55,7 @@ const sector = initialPane === 'about' ? '01' : '02';
       <RightRail activeKey={initialPane} />
 
       <div class="name-block" data-cf-text="name-block">
-        <div class="kicker">— STAFF AI ENGINEER · <a class="kicker-link" href="https://lilt.com" target="_blank" rel="noopener noreferrer" aria-label="LILT AI — lilt.com">LILT AI</a></div>
+        <div class="kicker">— <span data-i18n="hero.role">STAFF AI ENGINEER</span> · <a class="kicker-link" href="https://lilt.com" target="_blank" rel="noopener noreferrer" aria-label="LILT AI — lilt.com">LILT AI</a></div>
         <h1 class="name name-glitch">
           <span class="name-en">CHARLIE SHI</span>
           <span class="name-zh" lang="zh">石千里</span>
@@ -67,7 +67,7 @@ const sector = initialPane === 'about' ? '01' : '02';
       </div>
 
       <div class="meta-bar" data-cf-text="meta-bar">
-        <span class="meta-coords">↳ BOSTON, MA</span>
+        <span class="meta-coords" data-i18n="meta.loc">↳ BOSTON, MA</span>
         <span class="meta-sep">·</span>
         <a
           class="meta-coords-val"
@@ -77,7 +77,7 @@ const sector = initialPane === 'about' ? '01' : '02';
           aria-label="Open Boston, MA in Google Maps"
         >N 42°21′ W 71°03′</a>
         <span class="sp"></span>
-        <a class="meta-cta" href={initialPane === 'about' ? '#about' : '/resume.pdf'} data-cta-href>
+        <a class="meta-cta" href={initialPane === 'about' ? '#about' : '/resume.pdf'} data-cta-href data-i18n={initialPane === 'about' ? 'meta.enter' : 'meta.download'}>
           {initialPane === 'about' ? '↗ ENTER' : '↗ DOWNLOAD PDF'}
         </a>
       </div>

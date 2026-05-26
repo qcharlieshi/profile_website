@@ -4,16 +4,17 @@ import GlyphStrip from './GlyphStrip.astro';
 
 interface Props {
   label: string;
+  i18nKey?: string;
   index?: string;
 }
 
-const { label, index } = Astro.props;
+const { label, i18nKey, index } = Astro.props;
 ---
 
 <div class="div-wrap">
   <div class="div-inner">
     <span class="glyphs"><GlyphStrip direction="h" count={4} gap={12} /></span>
-    <span class="lbl">// {label}</span>
+    <span class="lbl">// {i18nKey ? <span data-i18n={i18nKey}>{label}</span> : label}</span>
     <div class="rule"></div>
     <RegMark size={14} />
     {index && <span class="idx">{index}</span>}

@@ -1,28 +1,28 @@
 ---
 const experience = [
-  { ln: '01', role: 'STAFF AI ENGINEER',       org: 'LILT',            yr: '2023 →' },
-  { ln: '02', role: 'SR FULLSTACK ENG',        org: 'OWN UP',          yr: '2018–22' },
-  { ln: '03', role: 'SOFTWARE ENG · UI/UX',    org: 'BOSTON CAPITAL',  yr: '2017–18' },
-  { ln: '04', role: 'PM · CONSULTANT',         org: 'WLH CONSULTING',  yr: '2014–16' },
+  { ln: '01', role: 'STAFF AI ENGINEER',       roleKey: 'resume.role.staff',     org: 'LILT',            yr: '2023 →' },
+  { ln: '02', role: 'SR FULLSTACK ENG',        roleKey: 'resume.role.fullstack', org: 'OWN UP',          yr: '2018–22' },
+  { ln: '03', role: 'SOFTWARE ENG · UI/UX',    roleKey: 'resume.role.uiux',      org: 'BOSTON CAPITAL',  yr: '2017–18' },
+  { ln: '04', role: 'PM · CONSULTANT',         roleKey: 'resume.role.pm',        org: 'WLH CONSULTING',  yr: '2014–16' },
 ];
 
 const stack = ['TypeScript', 'Python', 'Java', 'Go', 'Rust', 'C', 'React', 'Node', 'Spring', 'K8s', 'LLMs', 'MCP', 'RAG', 'Redis', 'GCP', 'AWS'];
 const stackHighlighted = new Set(['TypeScript', 'Python', 'Java']);
 
 const education = [
-  { ln: '01', role: 'BBA · FIN + ORG MGMT', org: 'EMORY UNIVERSITY', yr: '2013' },
+  { ln: '01', role: 'BBA · FIN + ORG MGMT', roleKey: 'resume.role.edu', org: 'EMORY UNIVERSITY', yr: '2013' },
 ];
 ---
 
 <div class="pane" data-pane-key="resume">
-  <div class="pane-label">// RESUME · 11Y · SCROLL ↓</div>
+  <div class="pane-label" data-i18n="resume.label">// RESUME · 11Y · SCROLL ↓</div>
 
   <div class="doc-section">
-    <h4>// EXPERIENCE</h4>
+    <h4 data-i18n="resume.experience">// EXPERIENCE</h4>
     {experience.map((e) => (
       <div class="doc-line">
         <span class="ln">{e.ln}</span>
-        <span class="role">{e.role}</span>
+        <span class="role" data-i18n={e.roleKey}>{e.role}</span>
         <span class="sp"></span>
         <span class="org">{e.org}</span>
         <span class="yr">{e.yr}</span>
@@ -31,7 +31,7 @@ const education = [
   </div>
 
   <div class="doc-section">
-    <h4>// STACK</h4>
+    <h4 data-i18n="resume.stack">// STACK</h4>
     <div class="stack-line">
       {stack.map((s, i) => (
         <>{i > 0 && ' · '}{stackHighlighted.has(s) ? <b>{s}</b> : <span>{s}</span>}</>
@@ -40,11 +40,11 @@ const education = [
   </div>
 
   <div class="doc-section">
-    <h4>// EDUCATION</h4>
+    <h4 data-i18n="resume.education">// EDUCATION</h4>
     {education.map((e) => (
       <div class="doc-line">
         <span class="ln">{e.ln}</span>
-        <span class="role">{e.role}</span>
+        <span class="role" data-i18n={e.roleKey}>{e.role}</span>
         <span class="sp"></span>
         <span class="org">{e.org}</span>
         <span class="yr">{e.yr}</span>

@@ -5,10 +5,10 @@ interface Props {
 const { activeKey } = Astro.props;
 
 const items = [
-  { key: 'about',     href: '/',           label: 'ABOUT',     sector: '01' },
-  { key: 'resume',    href: '/resume/',    label: 'RESUME',    sector: '02' },
-  { key: 'portfolio', href: '/portfolio/', label: 'PORTFOLIO', sector: '03' },
-  { key: 'blog',      href: '/blog/',      label: 'BLOG',      sector: '04' },
+  { key: 'about',     href: '/',           label: 'ABOUT',     i18n: 'rail.about',     sector: '01' },
+  { key: 'resume',    href: '/resume/',    label: 'RESUME',    i18n: 'rail.resume',    sector: '02' },
+  { key: 'portfolio', href: '/portfolio/', label: 'PORTFOLIO', i18n: 'rail.portfolio', sector: '03' },
+  { key: 'blog',      href: '/blog/',      label: 'BLOG',      i18n: 'rail.blog',      sector: '04' },
 ] as const;
 
 const active = items.find(i => i.key === activeKey)!;
@@ -16,7 +16,7 @@ const active = items.find(i => i.key === activeKey)!;
 
 <aside class="rail" data-rail>
   <div class="sector-display">
-    <div class="sector-lbl">// SECTOR</div>
+    <div class="sector-lbl" data-i18n="rail.sector">// SECTOR</div>
     <div>
       <span class="sector-num" data-rail-sector>{active.sector}</span>
       <span class="sector-denom">/ 04</span>
@@ -34,7 +34,7 @@ const active = items.find(i => i.key === activeKey)!;
           data-sector={item.sector}
         >
           <span class="caret" aria-hidden="true">▸</span>
-          {item.label}
+          <span data-i18n={item.i18n}>{item.label}</span>
         </a>
       </li>
     ))}

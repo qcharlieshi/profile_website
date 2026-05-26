@@ -3,6 +3,8 @@
 // Marathon transition trigger, sector glyph-overtake animation, and
 // the horizontal mobile rail clicks.
 
+import { T, TH, altLang, LANGS, LANG_LABEL, type Lang } from '../lib/i18n';
+
 type PaneKey = 'about' | 'resume';
 
 interface RouteEntry {
@@ -111,16 +113,17 @@ function swapPane(targetKey: PaneKey, targetSector: string, targetPath: string):
       a.classList.toggle('active', a.dataset.key === targetKey);
     });
 
-    // Update meta-bar CTA
+    // Update meta-bar CTA: swap the i18n key + re-apply for current lang.
     const cta = $<HTMLAnchorElement>('[data-cta-href]');
     if (cta) {
       if (targetKey === 'about') {
-        cta.textContent = '↗ ENTER';
+        cta.dataset.i18n = 'meta.enter';
         cta.setAttribute('href', '#about');
       } else {
-        cta.textContent = '↗ DOWNLOAD PDF';
+        cta.dataset.i18n = 'meta.download';
         cta.setAttribute('href', '/resume.pdf');
       }
+      applyLang(getLang());
     }
 
     // Update terminal status strip
@@ -221,13 +224,29 @@ function runCommand(raw: string, output: HTMLElement): void {
       termPrint(output, location.pathname);
       return;
     case 'whoami':
-      termPrint(output, '<b>charlie shi</b> — staff ai engineer @ lilt');
+      termPrint(output, lookupT('term.whoami', getLang()) ?? 'charlie shi — staff ai engineer @ lilt');
       return;
+    case 'lang': {
+      const sub = args[0]?.toLowerCase();
+      if (!sub) {
+        const cur = getLang();
+        termPrint(output, `current: <b>${LANG_LABEL[cur]}</b> (${cur})`);
+        termPrint(output, `available: ${LANGS.map(l => `<b>${l}</b>`).join(' · ')} — usage: <b>lang &lt;code&gt;</b>`);
+        return;
+      }
+      if (!(LANGS as string[]).includes(sub)) {
+        termPrint(output, `lang: unknown code <b>${sub}</b>. try: ${LANGS.join(', ')}`, 'err');
+        return;
+      }
+      setLang(sub as Lang);
+      termPrint(output, `↻ switched to <b>${LANG_LABEL[sub as Lang]}</b>`);
+      return;
+    }
     case 'clear':
       termClear(output);
       return;
     case 'help':
-      termPrint(output, 'commands: <b>cd</b> &lt;route&gt; · <b>ls</b> · <b>pwd</b> · <b>whoami</b> · <b>clear</b> · <b>help</b>');
+      termPrint(output, 'commands: <b>cd</b> &lt;route&gt; · <b>ls</b> · <b>pwd</b> · <b>whoami</b> · <b>lang</b> &lt;code&gt; · <b>clear</b> · <b>help</b>');
       termPrint(output, 'shortcuts: <b>about</b> · <b>resume</b> · <b>portfolio</b> · <b>blog</b> · <b>home</b>');
       return;
     default:
@@ -263,7 +282,7 @@ function initTerminal(): void {
     } else if (e.key === 'Tab') {
       e.preventDefault();
       const prefix = input.value.toLowerCase();
-      const candidates = ['cd', 'ls', 'pwd', 'whoami', 'clear', 'help', 'about', 'resume', 'portfolio', 'blog', 'home']
+      const candidates = ['cd', 'ls', 'pwd', 'whoami', 'lang', 'clear', 'help', 'about', 'resume', 'portfolio', 'blog', 'home']
         .filter(c => c.startsWith(prefix));
       if (candidates.length === 1) { input.value = candidates[0]; syncMirror(); }
     } else if (e.key === 'Escape') {
@@ -343,9 +362,111 @@ function initPopstate(): void {
   });
 }
 
+// ============ I18N + LANG GLITCH ============
+
+const LANG_KEY = 'lang';
+
+function getLang(): Lang {
+  try {
+    const raw = localStorage.getItem(LANG_KEY);
+    if (raw && (LANGS as string[]).includes(raw)) return raw as Lang;
+  } catch {/* localStorage blocked */}
+  return 'en';
+}
+function setLang(l: Lang): void {
+  try { localStorage.setItem(LANG_KEY, l); } catch {/* ignore */}
+  document.documentElement.lang = l;
+  applyLang(l);
+}
+
+function lookupT(key: string, lang: Lang): string | undefined {
+  return T[key]?.[lang] ?? T[key]?.en;
+}
+function lookupTH(key: string, lang: Lang): string | undefined {
+  return TH[key]?.[lang] ?? TH[key]?.en;
+}
+
+// Wrap an i18n element with .lang-glitch structure (idempotent).
+// `mode='text'` swaps textContent on the inner spans; `mode='html'` swaps
+// innerHTML and uses the block-layout variant so multi-line prose lines up.
+function ensureGlitchStructure(
+  el: HTMLElement,
+  mode: 'text' | 'html' = 'text'
+): { primary: HTMLElement; alt: HTMLElement } {
+  let primary = el.querySelector<HTMLElement>(':scope > .lg-primary');
+  let alt     = el.querySelector<HTMLElement>(':scope > .lg-alt');
+  if (!primary || !alt) {
+    primary = document.createElement(mode === 'html' ? 'span' : 'span');
+    primary.className = 'lg-primary';
+    if (mode === 'html') {
+      primary.innerHTML = el.innerHTML;
+    } else {
+      primary.textContent = el.textContent ?? '';
+    }
+    alt = document.createElement('span');
+    alt.className = 'lg-alt';
+    alt.setAttribute('aria-hidden', 'true');
+    el.textContent = '';
+    el.appendChild(primary);
+    el.appendChild(alt);
+    el.classList.add('lang-glitch');
+    if (mode === 'html') el.classList.add('lang-glitch-block');
+    // Random delay so bursts stagger across the page (0–11s).
+    const d = (Math.random() * 11).toFixed(2) + 's';
+    primary.style.animationDelay = d;
+    alt.style.animationDelay = d;
+  }
+  return { primary, alt };
+}
+
+function applyLang(lang: Lang): void {
+  const alt = altLang(lang);
+
+  // Plain text nodes: [data-i18n="key"]
+  document.querySelectorAll<HTMLElement>('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n!;
+    const main = lookupT(key, lang);
+    const altText = lookupT(key, alt);
+    if (main === undefined) return;
+    if (el.hasAttribute('data-i18n-noglitch')) {
+      el.textContent = main;
+      return;
+    }
+    const parts = ensureGlitchStructure(el);
+    parts.primary.textContent = main;
+    parts.alt.textContent = altText ?? main;
+    el.classList.toggle('alt-en', alt === 'en');
+  });
+
+  // Inline-HTML nodes: [data-i18n-html="key"] — same glitch hold/transition,
+  // but swap innerHTML instead of textContent.
+  document.querySelectorAll<HTMLElement>('[data-i18n-html]').forEach(el => {
+    const key = el.dataset.i18nHtml!;
+    const main = lookupTH(key, lang);
+    const altHtml = lookupTH(key, alt);
+    if (main === undefined) return;
+    const parts = ensureGlitchStructure(el, 'html');
+    parts.primary.innerHTML = main;
+    parts.alt.innerHTML = altHtml ?? main;
+    el.classList.toggle('alt-en', alt === 'en');
+  });
+
+  // Name flicker: when active is ZH, swap which span is primary.
+  document.querySelectorAll<HTMLElement>('.name-glitch').forEach(el => {
+    el.classList.toggle('name-zh-primary', lang === 'zh');
+  });
+}
+
+function initI18n(): void {
+  const l = getLang();
+  document.documentElement.lang = l;
+  applyLang(l);
+}
+
 // ============ BOOT ============
 
 document.addEventListener('DOMContentLoaded', () => {
+  initI18n();
   initTerminal();
   initRail();
   initPopstate();
