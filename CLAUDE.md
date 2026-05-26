@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Personal portfolio website built as a pure static site with Astro and Tailwind CSS, deployed on Cloudflare Pages. Three sections: Home (hero + about), Portfolio (project listings + detail pages), Blog (Medium-powered).
 
-**Design language:** "Antireal" — direct lineage from the artist who inspired Bungie's Marathon. Dark mode only, monospace metadata, blocky geometric typography. Yellow (`#ffd23f`) is the only primary accent; electric blue (`#1860ff`) is reserved for registration marks and hairline rules. Motifs: yellow corner brackets, dashed metadata rails, big yellow file-index numbers, vertical glyph strips (`× ○ ⊞ + ✕`), dashed enclosures, bracketed callout tags. All effects CSS-only — zero JavaScript shipped to the browser.
+**Design language:** "Antireal v2" — terminal-led navigation, hero-as-manifest. Dark mode only, monospace metadata, blocky geometric typography. Yellow (`#ffd23f`) is the primary UI accent; electric blue (`#1860ff`) is a secondary accent for content highlights (inline links, code spans, key dates/numbers). Sticky **mock terminal header** replaces the navbar — real interactive prompt with commands `cd / ls / pwd / whoami / clear / help`. The home (`/`) and resume (`/resume/`) routes render the same hero with different default panes; in-app swap uses `history.pushState` + a Marathon-style red-checkerboard transition. A **right rail** holds the active sector number (big yellow) above a 4-item label list (ABOUT / RESUME / PORTFOLIO / BLOG). Motifs: yellow corner brackets, dashed metadata rails, dense vertical glyph strips (`× ○ ⊞ + ✕ ⊟ ◇`), bracketed callout tags, glitchy EN↔ZH name flicker (chromatic split, clipped bands), real git commit info in the hero chrome. One small inline JS island (~250 LOC) handles terminal + transitions; everything else is CSS-only.
 
 ## Architecture
 
@@ -23,9 +23,11 @@ Personal portfolio website built as a pure static site with Astro and Tailwind C
 ```
 src/
 ├── layouts/
-│   └── Base.astro            # HTML shell: head, fonts, noise overlay, navbar, slot
+│   └── Base.astro            # HTML shell: head, fonts, noise, TerminalHeader, global PaneTransition, slot, page-foot MetaBar
 ├── pages/
-│   ├── index.astro           # Home: hero + about
+│   ├── index.astro           # Home: <Hero initialPane="about" />
+│   ├── resume/
+│   │   └── index.astro       # Resume: <Hero initialPane="resume" />
 │   ├── portfolio/
 │   │   ├── index.astro       # Portfolio listing
 │   │   └── [slug].astro      # Portfolio detail (getStaticPaths)
@@ -33,31 +35,34 @@ src/
 │       ├── index.astro       # Blog listing (Medium RSS)
 │       └── [slug].astro      # Blog post detail (getStaticPaths)
 ├── components/
-│   ├── Navbar.astro          # Fixed nav, blur backdrop, file-system brand + corner-tick active link
-│   ├── Hero.astro            # Full-viewport H2 asymmetric layout (corner frame, file index, glyph strip, meta bar)
-│   ├── AboutSection.astro    # Dashed-enclosure prose + stat strips + bracketed link tiles
-│   ├── SectionDivider.astro  # Glyph strip + // LABEL + dither rule + RegMark + optional index counter
-│   ├── PortfolioCard.astro   # Project card, glyph-grid background, corner ticks, [FEATURED] tag
-│   ├── BlogCard.astro        # Blog post preview card (B-prefixed file index, grayscale thumbnail)
-│   ├── CornerFrame.astro     # Yellow corner brackets wrapping a slot — page chrome primitive
-│   ├── MetaBar.astro         # Dashed-top metadata rail (date + coords + build hash + CTA)
-│   ├── FileIndex.astro       # Big yellow display number with mono label
-│   ├── RegMark.astro         # Blue `+` registration crosshair
-│   └── GlyphStrip.astro      # Vertical or horizontal repeating glyphs (× ○ ⊞ + ✕)
+│   ├── TerminalHeader.astro  # Fixed terminal-style top bar with prompt input + status row + output drawer
+│   ├── Hero.astro            # Full-viewport hero hosting active pane (about|resume), name bottom-left, right rail, top-right commit
+│   ├── RightRail.astro       # Sector number + 4-label nav list (about/resume/portfolio/blog)
+│   ├── PaneTransition.astro  # Three-layer red checkerboard overlay (.global variant for full-viewport)
+│   ├── panes/
+│   │   ├── AboutPane.astro   # About content: prose + 3 stats + 3 link tiles
+│   │   └── ResumePane.astro  # Resume content: experience / stack / education in code-listing format
+│   ├── SectionDivider.astro  # Glyph strip + // LABEL + dither rule + RegMark (still used in resume content)
+│   ├── PortfolioCard.astro   # Portfolio listing card
+│   ├── BlogCard.astro        # Blog listing card
+│   ├── CornerFrame.astro     # Yellow corner brackets wrapping a slot
+│   ├── MetaBar.astro         # Dashed-top metadata rail (date + build + CTA) — coords prop removed
+│   ├── FileIndex.astro       # (legacy primitive — kept for now, used inside SectionDivider)
+│   ├── RegMark.astro         # Blue + crosshair
+│   └── GlyphStrip.astro      # Vertical or horizontal repeating glyphs
 ├── content/
 │   ├── config.ts             # Collections schema (Zod)
-│   └── portfolio/            # One .md file per project (frontmatter + body)
+│   └── portfolio/            # One .md file per project
 ├── lib/
 │   ├── medium.ts             # Fetch + parse Medium RSS at build time
-│   └── buildMeta.ts          # Module-load-frozen snapshot for MetaBar (date, hex hash, coords)
+│   └── buildMeta.ts          # Real git data (shortHash, subject, date, branch) snapshot
+├── scripts/
+│   └── site.ts               # Vanilla TS: terminal commands, pane swap, transitions, sector glyph-overtake
 ├── types/
 │   └── index.ts              # MediumPost interface
 ├── styles/
-│   └── global.css            # Tailwind directives + design system CSS
-└── env.d.ts                  # Astro types reference
-public/
-├── images/                   # Portfolio images, icons
-└── favicon.ico
+│   └── global.css            # Tailwind directives + design system CSS + new keyframes
+└── env.d.ts
 ```
 
 **Motif components:** `CornerFrame`, `MetaBar`, `FileIndex`, `RegMark`, `GlyphStrip` in `src/components/`. These are the reusable antireal primitives; prefer them over ad-hoc absolute-positioned divs when adding new layouts. Build-time metadata for the meta bars comes from `src/lib/buildMeta.ts`.
@@ -90,7 +95,7 @@ public/
 
 ### Imports
 
-- Use **relative imports** in `.astro` files (e.g., `'../components/Navbar.astro'`) — the `@/*` alias is only configured for `tsconfig.json` and may not resolve in all `.astro` contexts.
+- Use **relative imports** in `.astro` files (e.g., `'../components/TerminalHeader.astro'`) — the `@/*` alias is only configured for `tsconfig.json` and may not resolve in all `.astro` contexts.
 
 ## Development Commands
 
@@ -119,6 +124,8 @@ npm run preview  # Serve built dist/ locally
 
 ## Documentation
 
+- **Antireal iteration spec:** `docs/superpowers/specs/2026-05-25-antireal-terminal-iteration-design.md`
+- **Antireal iteration plan:** `docs/superpowers/plans/2026-05-25-antireal-terminal-iteration.md`
 - **Antireal redesign spec:** `docs/superpowers/specs/2026-05-25-antireal-redesign-design.md`
 - **Antireal redesign plan:** `docs/superpowers/plans/2026-05-25-antireal-redesign.md`
 - **Original Astro migration spec:** `docs/superpowers/specs/2026-04-14-astro-cloudflare-migration-design.md`
