@@ -39,16 +39,15 @@ const paddedIndex = String(index).padStart(3, '0');
 <style>
   .card {
     position: relative;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background: var(--bg-surface);
     border: 1px solid var(--border);
     padding: 22px;
     min-height: 220px;
     text-decoration: none;
     color: inherit;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     transition: border-color 200ms ease;
   }
   .card:hover { border-color: var(--accent-yellow); }
