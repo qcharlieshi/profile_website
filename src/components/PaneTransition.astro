@@ -1,0 +1,16 @@
+---
+interface Props {
+  global?: boolean; // if true, position: fixed (full viewport) — used in Base.astro
+}
+const { global = false } = Astro.props;
+---
+
+<div
+  class:list={['pane-transition', global && 'global']}
+  data-pane-transition
+  aria-hidden="true"
+>
+  <div class="checker layer-1"></div>
+  <div class="checker layer-2"></div>
+  <div class="checker layer-3"></div>
+</div>
