@@ -1,74 +1,144 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import SectionDivider from '../../components/SectionDivider.astro';
+import CornerFrame from '../../components/CornerFrame.astro';
+import FileIndex from '../../components/FileIndex.astro';
+import MetaBar from '../../components/MetaBar.astro';
+import { getBuildMeta } from '../../lib/buildMeta';
 
 export async function getStaticPaths() {
   const projects = await getCollection('portfolio');
-  return projects.map((project) => ({
+  return projects.map((project, i) => ({
     params: { slug: project.slug },
-    props: { project },
+    props: { project, index: i + 1 },
   }));
 }
 
 interface Props {
   project: CollectionEntry<'portfolio'>;
+  index: number;
 }
 
-const { project } = Astro.props;
+const { project, index } = Astro.props;
 const { data, body } = project;
 const { Content } = await project.render();
 const hasBody = body.trim().length > 0;
+const paddedIndex = String(index).padStart(3, '0');
+const meta = getBuildMeta();
 ---
 
 <Base title={`${data.title} — Charlie Shi`}>
-  <div class="pt-20">
-    <SectionDivider label="PROJECT" />
-  </div>
+  <article class="detail">
+    <CornerFrame inset={18}>
+      <div class="detail-inner">
+        <div class="top-l">// PORTFOLIO / {data.title.toUpperCase()}</div>
+        <div class="top-r"><FileIndex index={paddedIndex} label="PORTFOLIO" size="md" /></div>
 
-  <article class="py-12">
-    <div class="max-w-[800px] mx-auto px-6">
-      <a href="/portfolio/" class="font-mono text-xs text-accent-cyan tracking-widest uppercase hover:text-accent-yellow transition-colors glitch-hover">
-        &larr; Back to Portfolio
-      </a>
+        <div class="body-wrap">
+          <a href="/portfolio/" class="back">← BACK TO PORTFOLIO</a>
 
-      <h1 class="font-display font-extrabold tracking-[0.1em] mt-8 mb-4" style="font-size: clamp(1.5rem, 3vw, 2.5rem);">
-        {data.title}
-      </h1>
+          <h1 class="title">{data.title}</h1>
 
-      <div class="flex items-center gap-4 mb-8">
-        <span class="font-mono text-xs text-text-secondary tracking-widest">{data.date}</span>
-        <div class="flex gap-2">
-          {data.tags.map((tag) => (
-            <span class="font-mono text-[10px] text-accent-magenta tracking-widest uppercase">
-              {tag}
-            </span>
-          ))}
+          <div class="meta-line">
+            <span>{data.date}</span>
+            {data.tags.map((t) => <span class="tag">{t.toUpperCase()}</span>)}
+          </div>
+
+          <div class="dashed-enclosure body">
+            <p class="lede">{data.description}</p>
+            {hasBody && (
+              <div class="prose prose-invert max-w-none mt-6">
+                <Content />
+              </div>
+            )}
+          </div>
+
+          <div class="ext-links">
+            {data.githubUrl && (
+              <a href={data.githubUrl} class="callout-tag" target="_blank" rel="noopener">↗ GITHUB</a>
+            )}
+            {data.liveUrl && (
+              <a href={data.liveUrl} class="callout-tag" target="_blank" rel="noopener">↗ LIVE</a>
+            )}
+          </div>
+
+          <div class="page-meta">
+            <MetaBar
+              date={meta.date}
+              coords={meta.coords}
+              build={meta.hash}
+              cta="↗ BACK"
+              ctaHref="/portfolio/"
+            />
+          </div>
         </div>
       </div>
-
-      <div class="dither-divider mb-8"></div>
-
-      <p class="text-lg leading-relaxed text-text-primary">{data.description}</p>
-
-      {hasBody && (
-        <div class="prose prose-invert max-w-none mt-8">
-          <Content />
-        </div>
-      )}
-
-      <div class="flex gap-4 mt-8">
-        {data.githubUrl && (
-          <a href={data.githubUrl} class="font-mono text-xs text-accent-cyan tracking-widest uppercase hover:text-accent-yellow transition-colors">
-            GitHub &rarr;
-          </a>
-        )}
-        {data.liveUrl && (
-          <a href={data.liveUrl} class="font-mono text-xs text-accent-cyan tracking-widest uppercase hover:text-accent-yellow transition-colors">
-            Live &rarr;
-          </a>
-        )}
-      </div>
-    </div>
+    </CornerFrame>
   </article>
 </Base>
+
+<style>
+  .detail { padding-top: 96px; padding-bottom: 64px; }
+  .detail-inner { padding: 32px 48px 48px; position: relative; }
+  .top-l {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent-yellow);
+  }
+  .top-r {
+    position: absolute;
+    top: 32px;
+    right: 48px;
+  }
+  .body-wrap {
+    max-width: 800px;
+    margin: 56px auto 0;
+  }
+  .back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent-yellow);
+    text-decoration: none;
+  }
+  .title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: clamp(28px, 4vw, 44px);
+    margin: 32px 0 16px;
+  }
+  .meta-line {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .meta-line .tag { color: var(--accent-yellow); }
+  .body { margin-top: 24px; }
+  .body .lede {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--text-primary);
+  }
+  .ext-links {
+    display: flex;
+    gap: 10px;
+    margin-top: 32px;
+  }
+  .ext-links .callout-tag {
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    text-decoration: none;
+  }
+  .page-meta { margin-top: 48px; }
+</style>
