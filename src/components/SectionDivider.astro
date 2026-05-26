@@ -1,15 +1,53 @@
 ---
+import RegMark from './RegMark.astro';
+import GlyphStrip from './GlyphStrip.astro';
+
 interface Props {
   label: string;
+  index?: string;
 }
 
-const { label } = Astro.props;
+const { label, index } = Astro.props;
 ---
 
-<div class="max-w-[1200px] mx-auto px-6 py-4">
-  <div class="flex items-center gap-4">
-    <span class="section-label">// {label}</span>
-    <div class="flex-1 dither-divider"></div>
-    <span class="reg-mark"></span>
+<div class="div-wrap">
+  <div class="div-inner">
+    <span class="glyphs"><GlyphStrip direction="h" count={4} gap={12} /></span>
+    <span class="lbl">// {label}</span>
+    <div class="rule"></div>
+    <RegMark size={14} />
+    {index && <span class="idx">{index}</span>}
   </div>
 </div>
+
+<style>
+  .div-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 56px 24px 16px;
+  }
+  .div-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--accent-yellow);
+    text-transform: uppercase;
+  }
+  .rule {
+    flex: 1;
+    height: 4px;
+    background-image: repeating-linear-gradient(90deg, var(--border) 0 2px, transparent 2px 4px);
+  }
+  .idx {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+  }
+</style>
