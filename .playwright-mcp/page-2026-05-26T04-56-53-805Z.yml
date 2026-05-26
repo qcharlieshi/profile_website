@@ -1,0 +1,48 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: +
+      - generic [ref=e5]: charlie_shi.sys
+      - generic [ref=e6]: ":"
+      - generic [ref=e7]: ~/portfolio
+      - generic [ref=e8]: $
+      - textbox "terminal command input" [ref=e9]
+      - generic [ref=e11]: ↵ EXEC · ESC · TAB
+    - generic [ref=e12]:
+      - generic [ref=e13]: CMD
+      - generic [ref=e14]: PATH
+      - generic [ref=e15]: /portfolio
+      - generic [ref=e16]: SECTOR
+      - generic [ref=e17]: 03/04
+      - generic [ref=e18]: COMMIT
+      - generic [ref=e19]: 0bd2bce
+      - generic [ref=e20]: 26.05.26
+  - main [ref=e21]:
+    - generic [ref=e24]:
+      - generic [ref=e26]:
+        - generic [ref=e27]: ×
+        - generic [ref=e28]: ○
+        - generic [ref=e29]: ⊞
+        - generic [ref=e30]: +
+      - generic [ref=e31]: // PORTFOLIO
+      - generic [ref=e33]: +
+    - link "[ FEATURED ] 001 — JAVASCRIPT GENZED | Online Multiplayer Arena Shooter GENZED was developed utilizing the Phaser Javascript game engine and socket technology to achieve real time multiplayer gameplay. We utilized various techniques to handle our client server architecture for smooth latency compensation. Pathfinding and lighting were default achieved by using a modified A* algorithm and our own raycasting formula. April 2017 JAVASCRIPT REACT PHASER ↗ READ" [ref=e37] [cursor=pointer]:
+      - /url: /portfolio/genzed/
+      - generic [ref=e38]: "[ FEATURED ]"
+      - generic [ref=e39]:
+        - generic [ref=e41]: "001"
+        - generic [ref=e42]: — JAVASCRIPT
+        - heading "GENZED | Online Multiplayer Arena Shooter" [level=3] [ref=e43]
+      - paragraph [ref=e44]: GENZED was developed utilizing the Phaser Javascript game engine and socket technology to achieve real time multiplayer gameplay. We utilized various techniques to handle our client server architecture for smooth latency compensation. Pathfinding and lighting were default achieved by using a modified A* algorithm and our own raycasting formula.
+      - generic [ref=e45]:
+        - generic [ref=e46]: April 2017
+        - generic [ref=e47]: JAVASCRIPT
+        - generic [ref=e48]: REACT
+        - generic [ref=e49]: PHASER
+        - generic [ref=e50]: ↗ READ
+  - contentinfo [ref=e53]:
+    - generic [ref=e55]:
+      - generic [ref=e56]: ↳ 26.05.26
+      - generic [ref=e57]: BUILD 0bd2bce
+      - link "↗ TOP" [ref=e58] [cursor=pointer]:
+        - /url: "#top"
