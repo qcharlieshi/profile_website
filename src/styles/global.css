@@ -130,9 +130,73 @@
 .section-label {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--text-secondary);
+  color: var(--accent-yellow);
+}
+
+/* ============ ANTIREAL UTILITIES ============ */
+
+.glyph-grid {
+  background-color: var(--bg-primary);
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255, 210, 63, 0.08) 1px, transparent 1px);
+  background-size: 18px 18px, 54px 54px;
+  background-position: 0 0, 9px 9px;
+}
+
+.dashed-enclosure {
+  border: var(--rule-thin) dashed var(--border);
+  padding: 18px 22px;
+}
+
+.callout-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  color: var(--accent-yellow);
+  text-transform: uppercase;
+}
+
+.callout-tag::before { content: '['; color: var(--accent-yellow); }
+.callout-tag::after  { content: ']'; color: var(--accent-yellow); }
+
+.scan-line-soft {
+  position: relative;
+}
+
+.scan-line-soft::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(255, 255, 255, 0.012) 3px,
+    rgba(255, 255, 255, 0.012) 4px
+  );
+  z-index: 1;
+}
+
+.hairline-yellow {
+  display: inline-block;
+  height: var(--rule-thin);
+  background: var(--accent-yellow);
+  vertical-align: middle;
+}
+
+.hairline-blue {
+  display: inline-block;
+  height: var(--rule-thin);
+  background: var(--accent-blue);
+  opacity: 0.7;
+  vertical-align: middle;
 }
 
 .name-flicker {
