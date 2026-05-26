@@ -83,12 +83,12 @@ const active = items.find(i => i.key === activeKey)!;
   @media (max-width: 768px) {
     .rail {
       position: absolute;
-      top: auto; right: 22px; left: 22px;
-      bottom: 80px;
+      top: 56px; right: 40px; left: 40px;
+      bottom: auto;
       width: auto;
     }
     .sector-display {
-      display: none; /* sector shown above active label only on mobile */
+      display: none; /* sector shown below active label only on mobile */
     }
     .rail-list {
       display: grid;
@@ -101,15 +101,15 @@ const active = items.find(i => i.key === activeKey)!;
       text-align: center;
       font-size: 9px;
       letter-spacing: 0.18em;
-      padding-top: 8px;
-      border-top: 1px dashed var(--border);
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--border);
     }
     .rail-item.active::before {
       content: attr(data-sector);
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 100%;
+      top: 100%;
       text-align: center;
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 800;
@@ -117,7 +117,7 @@ const active = items.find(i => i.key === activeKey)!;
       color: var(--accent-yellow);
       letter-spacing: 0;
       line-height: 1;
-      margin-bottom: 4px;
+      margin-top: 4px;
     }
     .rail-item .caret { display: none; }
   }

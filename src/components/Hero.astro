@@ -154,7 +154,7 @@ const sector = initialPane === 'about' ? '01' : '02';
   .pane-container {
     position: absolute;
     top: 140px;
-    bottom: 270px;
+    bottom: 296px;
     left: 130px;
     right: 300px;
   }
@@ -182,7 +182,7 @@ const sector = initialPane === 'about' ? '01' : '02';
   .name-block {
     position: absolute;
     left: 60px;
-    bottom: 70px;
+    bottom: 96px;
     max-width: 70%;
   }
   .kicker {
@@ -211,7 +211,7 @@ const sector = initialPane === 'about' ? '01' : '02';
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 800;
     letter-spacing: 0.04em;
-    font-size: clamp(40px, 6.4vw, 72px);
+    font-size: clamp(56px, 8.5vw, 96px);
     line-height: 0.9;
     color: var(--text-primary);
     text-transform: uppercase;
@@ -219,7 +219,7 @@ const sector = initialPane === 'about' ? '01' : '02';
     white-space: nowrap;
   }
   .name .name-zh {
-    font-size: clamp(40px, 6.4vw, 72px);
+    font-size: clamp(56px, 8.5vw, 96px);
     letter-spacing: 0.06em;
   }
 
@@ -239,8 +239,8 @@ const sector = initialPane === 'about' ? '01' : '02';
   }
   .meta-rail {
     position: absolute;
-    left: 60px; right: 60px;
-    bottom: 48px;
+    left: 40px; right: 40px;
+    bottom: 61px;
     height: 14px;
     display: flex;
     align-items: center;
@@ -265,22 +265,22 @@ const sector = initialPane === 'about' ? '01' : '02';
 
   @media (max-width: 768px) {
     .top-l, .top-r { top: 13px; height: 14px; font-size: 9px; letter-spacing: 0.18em; }
-    .top-l { left: 24px; }
+    .top-l { left: 40px; }
     .top-r { right: 40px; }
     .top-r .commit-sub { display: none; }
     .top-r .commit-line span[data-i18n="hero.commit"] { display: none; }
     .top-r .commit-line b { margin-right: 0; }
     .glyphs { display: none; }
     .pane-container {
-      top: 90px; bottom: 240px; left: 40px; right: 40px;
+      top: 130px; bottom: 230px; left: 40px; right: 40px;
     }
     .pane-frame { padding: 14px 16px; }
     .pane-slot { inset: 14px 16px; }
-    .name-block { left: 24px; bottom: 140px; max-width: 92%; }
-    .name { font-size: 38px; white-space: nowrap; }
-    .name .name-zh { font-size: 38px; }
-    .kicker { font-size: 9px; margin-bottom: 8px; }
-    .meta-bar { bottom: 13px; height: 14px; left: 24px; right: 24px; }
-    .meta-rail { bottom: 35px; left: 24px; right: 24px; height: 12px; }
+    .name-block { left: 40px; bottom: 96px; max-width: 92%; }
+    .name { font-size: 56px; white-space: nowrap; }
+    .name .name-zh { font-size: 56px; }
+    .kicker { font-size: 9px; margin-bottom: 10px; }
+    .meta-bar { bottom: 13px; height: 14px; left: 40px; right: 40px; }
+    .meta-rail { bottom: 56px; left: 32px; right: 32px; height: 12px; }
   }
 </style>
