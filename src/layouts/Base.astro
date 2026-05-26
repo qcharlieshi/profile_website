@@ -1,5 +1,7 @@
 ---
 import Navbar from '../components/Navbar.astro';
+import MetaBar from '../components/MetaBar.astro';
+import { getBuildMeta } from '../lib/buildMeta';
 
 interface Props {
   title: string;
@@ -8,6 +10,7 @@ interface Props {
 }
 
 const { title, description = 'Charlie Shi — Full Stack Engineer', ogImage } = Astro.props;
+const meta = getBuildMeta();
 ---
 
 <!doctype html>
@@ -28,7 +31,8 @@ const { title, description = 'Charlie Shi — Full Stack Engineer', ogImage } = 
     />
     <title>{title}</title>
   </head>
-  <body class="bg-bg-primary text-text-primary">
+  <body class="bg-bg-primary text-text-primary scan-line-soft">
+    <a id="top" tabindex="-1" aria-hidden="true" style="position:absolute;top:0;left:0;"></a>
     <svg class="hidden" aria-hidden="true">
       <filter id="noise">
         <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
@@ -37,9 +41,30 @@ const { title, description = 'Charlie Shi — Full Stack Engineer', ogImage } = 
     <div class="noise-overlay" style="filter: url(#noise);"></div>
     <Navbar />
     <slot />
+    <footer class="page-foot">
+      <div class="page-foot-inner">
+        <MetaBar
+          date={meta.date}
+          coords={meta.coords}
+          build={meta.hash}
+          cta="↗ TOP"
+          ctaHref="#top"
+        />
+      </div>
+    </footer>
   </body>
 </html>
 
 <style is:global>
   @import '../styles/global.css';
+
+  .page-foot {
+    border-top: 1px solid var(--border);
+    margin-top: 64px;
+  }
+  .page-foot-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 24px 32px;
+  }
 </style>
